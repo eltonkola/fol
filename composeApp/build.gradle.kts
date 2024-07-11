@@ -81,6 +81,9 @@ kotlin {
             implementation(libs.multiplatform.settings)
             implementation(libs.multiplatform.settings.no.arg)
 
+            implementation(libs.qrose)
+            implementation(libs.sonner)
+
         }
         desktopMain.dependencies {
             implementation(libs.kotlinx.coroutines.swing)

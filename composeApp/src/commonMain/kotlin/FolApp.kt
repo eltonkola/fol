@@ -5,14 +5,13 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.fol.com.fol.ui.SplashScreen
 import com.fol.com.fol.model.AppsScreen
 import com.fol.com.fol.ui.app.*
+import com.fol.com.fol.ui.app.profile.ProfileScreen
 import com.fol.com.fol.ui.onboarding.CreateAccountScreen
 import com.fol.com.fol.ui.onboarding.LandingScreen
 import com.fol.com.fol.ui.onboarding.RecoverAccountScreen
