@@ -51,7 +51,7 @@ fun MainScreen(
                 backgroundColor = MaterialTheme.colors.primarySurface,
                 contentColor = MaterialTheme.colors.onPrimary,
                 title = {
-                    Text("FOL - ${uiState.user.name}")
+                    Text("FOL - ${uiState.user.id}")
                 },
                 actions = {
                     IconButton(onClick = {

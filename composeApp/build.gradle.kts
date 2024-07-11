@@ -9,6 +9,8 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlin.serialization )
+    alias(libs.plugins.realm)
 }
 
 kotlin {
@@ -56,6 +58,8 @@ kotlin {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.kotlinx.coroutines.android)
+
+
         }
         
         commonMain.dependencies {
@@ -66,10 +70,16 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(projects.shared)
-
             implementation(libs.navigation.compose)
             implementation(libs.lifecycle.viewmodel.compose)
             implementation(libs.kotlinx.datetime)
+            implementation(libs.constraintlayout.compose.multiplatform)
+            implementation(libs.kotlinx.serialization.json)
+
+
+            implementation(libs.realm)
+            implementation(libs.multiplatform.settings)
+            implementation(libs.multiplatform.settings.no.arg)
 
         }
         desktopMain.dependencies {
@@ -77,6 +87,15 @@ kotlin {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
         }
+
+        iosMain.dependencies {
+
+        }
+
+        wasmJsMain.dependencies {
+
+        }
+
     }
 }
 

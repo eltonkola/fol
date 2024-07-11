@@ -1,13 +1,7 @@
 package com.fol.com.fol.model
 
-import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.Instant
 
-data class UserAccount(
-    val name : String,
-    val publicKey : String,
-    val privateKey : String,
-)
 
 data class Contact(
     val name : String,

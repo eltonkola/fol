@@ -2,9 +2,9 @@ package com.fol.com.fol.ui.app
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fol.com.fol.db.AppProfile
 import com.fol.com.fol.model.DiGraph
 import com.fol.com.fol.model.ThreadPreview
-import com.fol.com.fol.model.UserAccount
 import com.fol.com.fol.model.repo.MessagesRepository
 import com.fol.model.repo.AccountRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 data class MainUiState(
-    val user: UserAccount,
+    val user: AppProfile,
     val threads: List<ThreadPreview> = emptyList(),
 )
 

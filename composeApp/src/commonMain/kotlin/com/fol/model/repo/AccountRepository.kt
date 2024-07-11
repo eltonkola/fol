@@ -1,39 +1,49 @@
 package com.fol.model.repo
 
-import com.fol.com.fol.model.DiGraph
-import com.fol.com.fol.model.UserAccount
+import com.fol.com.fol.db.AppProfile
+import com.fol.com.fol.db.DbManager
+import com.russhwolf.settings.Settings
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 
 class AccountRepository(
-    private val coroutineScope: CoroutineScope
+    private val coroutineScope: CoroutineScope,
+    private val settings: Settings,
+    private val dbManager: DbManager
 ) {
 
-    val currentUser: UserAccount
+    companion object {
+        const val USER_CREATED = "USER_CREATED"
+    }
+
+    val currentUser: AppProfile
         get() = userAccount!!
 
-    private var userAccount: UserAccount? = null
+    private var userAccount: AppProfile? = null
 
-    suspend fun loadUser() : UserAccount? {
-        //TODO - load user account from local storage
-        delay(2_000)
+    fun accountExists() : Boolean {
+        return settings.getBoolean(USER_CREATED, false)
+    }
+
+    fun loadUser(pin: String) : AppProfile? {
+        val profile = dbManager.loadProfile(pin)
+        userAccount = profile
         return userAccount
     }
 
-    suspend fun createUser(name : String, publicKey : String, privateKey : String) : UserAccount? {
-        //TODO -  create user, private key and public one and save it on storage
-        delay(1_000)
-        userAccount = UserAccount(name, publicKey, privateKey)
+    fun createUser( publicKey : String, privateKey : String, pin: String) : AppProfile? {
+        val profile = dbManager.createProfile(passcode = pin, publicKey = publicKey, privateKey = privateKey)
+        userAccount = profile
+        if(userAccount != null){
+            settings.putBoolean(USER_CREATED, true)
+        }
         return userAccount
-
     }
 
-    suspend fun recoverUser(name : String, publicKey : String, privateKey : String) : UserAccount? {
-        //TODO -  create user, private key and public one and save it on storage
-        delay(1_000)
-        userAccount = UserAccount(name, publicKey, privateKey)
-        return userAccount
+    fun recoverUser( publicKey : String, privateKey : String, pin: String) : AppProfile? {
+        //TODO -  validate public and private key
 
+        return createUser(publicKey, privateKey, pin)
     }
 
 }
