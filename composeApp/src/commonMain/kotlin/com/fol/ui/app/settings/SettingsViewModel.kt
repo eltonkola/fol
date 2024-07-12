@@ -54,7 +54,7 @@ class SettingsViewModel(
             SettingsUiState.Ready(
                 user = accountRepository.currentUser,
                 darkTheme = darkTheme,
-                systemTheme = appSettings.isDarkTheme(),
+                systemTheme = appSettings.isSystemTheme(),
             )
         }
     }
