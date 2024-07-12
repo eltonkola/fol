@@ -19,7 +19,7 @@ class DbManager {
         return (hash + hash).toUByteArray().asByteArray()
     }
 
-    fun openDatabase(passcode: String) {
+    private fun openDatabase(passcode: String) {
 
         val config = RealmConfiguration.Builder(schema = setOf(AppContact::class, AppProfile::class))
             .encryptionKey(getEncryptionKey(passcode))
@@ -77,6 +77,13 @@ class DbManager {
     private fun getProfile(): AppProfile? {
         val profile = realm.query<AppProfile>().first().find()
         return profile
+    }
+
+    fun deleteAllData(){
+        realm.writeBlocking {
+            this.deleteAll()
+
+        }
     }
 
 }

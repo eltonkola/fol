@@ -1,20 +1,14 @@
 package com.fol.model.repo
 
 import com.fol.com.fol.db.AppProfile
+import com.fol.com.fol.db.AppSettings
 import com.fol.com.fol.db.DbManager
-import com.russhwolf.settings.Settings
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
 
 class AccountRepository(
-    private val coroutineScope: CoroutineScope,
-    private val settings: Settings,
+    private val appSettings: AppSettings,
     private val dbManager: DbManager
 ) {
 
-    companion object {
-        const val USER_CREATED = "USER_CREATED"
-    }
 
     val currentUser: AppProfile
         get() = userAccount!!
@@ -22,7 +16,7 @@ class AccountRepository(
     private var userAccount: AppProfile? = null
 
     fun accountExists() : Boolean {
-        return settings.getBoolean(USER_CREATED, false)
+        return appSettings.accountExists()
     }
 
     fun loadUser(pin: String) : AppProfile? {
@@ -35,7 +29,7 @@ class AccountRepository(
         val profile = dbManager.createProfile(passcode = pin, publicKey = publicKey, privateKey = privateKey)
         userAccount = profile
         if(userAccount != null){
-            settings.putBoolean(USER_CREATED, true)
+            appSettings.setAccountExists(true)
         }
         return userAccount
     }
@@ -44,6 +38,12 @@ class AccountRepository(
         //TODO -  validate public and private key
 
         return createUser(publicKey, privateKey, pin)
+    }
+
+    fun deleteAccount() {
+        dbManager.deleteAllData()
+        appSettings.setAccountExists(false)
+        userAccount = null
     }
 
 }

@@ -12,6 +12,7 @@ import com.fol.com.fol.ui.SplashScreen
 import com.fol.com.fol.model.AppsScreen
 import com.fol.com.fol.ui.app.*
 import com.fol.com.fol.ui.app.profile.ProfileScreen
+import com.fol.com.fol.ui.app.settings.SettingsScreen
 import com.fol.com.fol.ui.onboarding.CreateAccountScreen
 import com.fol.com.fol.ui.onboarding.LandingScreen
 import com.fol.com.fol.ui.onboarding.RecoverAccountScreen

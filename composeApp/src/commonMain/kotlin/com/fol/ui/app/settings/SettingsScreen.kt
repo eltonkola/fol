@@ -1,0 +1,229 @@
+package com.fol.com.fol.ui.app.settings
+
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Switch
+import androidx.compose.material.SwitchDefaults
+import androidx.compose.material.Text
+import androidx.compose.material.TextField
+import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import com.dokar.sonner.Toaster
+import com.dokar.sonner.rememberToasterState
+import com.fol.com.fol.model.AppsScreen
+
+@Composable
+fun SettingsScreen(
+    navController: NavHostController,
+    viewModel: SettingsViewModel = viewModel { SettingsViewModel() }
+) {
+
+    val uiState by viewModel.uiState.collectAsState()
+
+    when (uiState) {
+        is SettingsUiState.Loading -> LoadingScreen()
+        is SettingsUiState.Error -> ErrorScreen()
+        is SettingsUiState.Deleted -> {
+            navController.navigate(AppsScreen.Splash.name) {
+                popUpTo(AppsScreen.Splash.name) { inclusive = true }
+            }
+        }
+        is SettingsUiState.Ready -> SettingsScreen(
+            (uiState as SettingsUiState.Ready),
+            navController,
+            viewModel
+        )
+    }
+
+}
+    @Composable
+    private fun LoadingScreen() {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
+        }
+    }
+
+    @Composable
+    private fun ErrorScreen() {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text("Can load your settings, probably the app is fucked!!!")
+        }
+    }
+
+    @Composable
+    private fun SettingsScreen(
+        data: SettingsUiState.Ready,
+        navController: NavHostController,
+        viewModel: SettingsViewModel) {
+
+    val clipboardManager = LocalClipboardManager.current
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Settings") },
+                navigationIcon = {
+                    IconButton(onClick = {
+                        navController.popBackStack()
+                    }) {
+                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                }
+            )
+        },
+        content = {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+            ) {
+
+                Text(
+                    text = "System theme: ${if (data.systemTheme) "On" else "Off"}",
+                    fontSize = 20.sp
+                )
+                Switch(
+                    checked = data.systemTheme,
+                    onCheckedChange = {
+                        viewModel.updateSystemTheme(it)
+                    },
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = MaterialTheme.colors.primary,
+                        uncheckedThumbColor = MaterialTheme.colors.onBackground
+                    )
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                if(!data.systemTheme) {
+                    Text(
+                        text = "Dark Mode: ${if (data.darkTheme) "On" else "Off"}",
+                        fontSize = 20.sp
+                    )
+                    Switch(
+                        checked = data.darkTheme,
+                        onCheckedChange = {
+                            viewModel.updateDarkTheme(it)
+                        },
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = MaterialTheme.colors.primary,
+                            uncheckedThumbColor = MaterialTheme.colors.onBackground
+                        )
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+
+                Text(
+                    text = "Export account",
+                    fontSize = 20.sp
+                )
+                Text(
+                    text = "Make sure you store the private and public key secretly and securely.",
+                    fontSize = 16.sp
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+
+
+                Text(
+                    text = "Public Key",
+                    fontSize = 12.sp
+                )
+
+                val toaster = rememberToasterState()
+                Toaster(state = toaster)
+
+
+                Row {
+                    TextField(
+                        value = "fol://${data.user.publicKey}",
+                        onValueChange = {},
+                        readOnly = true,
+                        maxLines = 2,
+                        textStyle = TextStyle(fontSize = 10.sp),
+                        modifier = Modifier.weight(1f)
+                    )
+                    IconButton({
+                        clipboardManager.setText(AnnotatedString(data.user.publicKey))
+                        toaster.show("Public key copied!")
+                    }) {
+                        Icon(imageVector = Icons.AutoMirrored.Filled.Send, contentDescription = "Copy")
+                    }
+                }
+
+                Text(
+                    text = "Private Key",
+                    fontSize = 12.sp
+                )
+                Row {
+                    TextField(
+                        value = "fol://${data.user.privateKey}",
+                        onValueChange = {},
+                        readOnly = true,
+                        maxLines = 2,
+                        textStyle = TextStyle(fontSize = 10.sp),
+                        modifier = Modifier.weight(1f)
+                    )
+                    IconButton({
+                        clipboardManager.setText(AnnotatedString(data.user.privateKey))
+                        toaster.show("private key copied!")
+                    }) {
+                        Icon(imageVector = Icons.AutoMirrored.Filled.Send, contentDescription = "Copy")
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "Danger zone",
+                    fontSize = 20.sp
+                )
+                Text(
+                    text = "This operation cant not be reversed, all data and profile will be deleted.",
+                    fontSize = 16.sp
+                )
+
+                Button(
+                    onClick = {
+                        viewModel.deleteAccount()
+                    },
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red)
+                ) {
+                    Text("DELETE ACCOUNT")
+                }
+
+            }
+        }
+    )
+
+
+}

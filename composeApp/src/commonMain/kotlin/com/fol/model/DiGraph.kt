@@ -1,5 +1,6 @@
 package com.fol.com.fol.model
 
+import com.fol.com.fol.db.AppSettings
 import com.fol.com.fol.db.DbManager
 import com.fol.com.fol.model.repo.ContactsRepository
 import com.fol.model.repo.AccountRepository
@@ -14,11 +15,11 @@ object DiGraph{
     private val coroutineScope = CoroutineScope(appDispatcher)
 
     private val settings: Settings = Settings()
-
     private val dbManager : DbManager = DbManager()
+    private val contactsRepository = ContactsRepository(coroutineScope = coroutineScope)
+    val appSettings = AppSettings(settings)
 
-    val accountRepository = AccountRepository(coroutineScope = coroutineScope, dbManager = dbManager, settings = settings)
-    val contactsRepository = ContactsRepository(coroutineScope = coroutineScope)
+    val accountRepository = AccountRepository(dbManager = dbManager, appSettings = appSettings)
     val messagesRepository = MessagesRepository(contactsRepository = contactsRepository, coroutineScope = coroutineScope)
 
 }
