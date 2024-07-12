@@ -8,17 +8,18 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.filled.ContentCopy
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -88,6 +89,7 @@ private fun ErrorScreen() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SelfProfileScreen(user: AppProfile,  navController: NavHostController) {
 
@@ -135,7 +137,7 @@ private fun SelfProfileScreen(user: AppProfile,  navController: NavHostControlle
                         clipboardManager.setText(AnnotatedString(user.publicKey))
                         toaster.show("Public profile code copied!")
                     }) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.Send, contentDescription = "Copy")
+                        Icon(imageVector = Icons.Default.ContentCopy, contentDescription = "Copy")
                     }
                 }
 
@@ -146,6 +148,7 @@ private fun SelfProfileScreen(user: AppProfile,  navController: NavHostControlle
 
                 val logoPainter : Painter = painterResource(Res.drawable.compose_multiplatform)
                 Image(
+                    modifier = Modifier.padding(16.dp),
                     painter = rememberQrCodePainter("fol://${user.publicKey}"){
                         logo {
                             painter = logoPainter

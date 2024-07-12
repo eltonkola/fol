@@ -9,16 +9,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material.icons.filled.MailOutline
+import androidx.compose.material.icons.filled.KeyboardBackspace
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -87,7 +83,7 @@ fun KeyboardUi(
                     }
                     if (index == 2) {
                         KeyButton(
-                            icon = Icons.Default.Delete,
+                            icon = Icons.Default.KeyboardBackspace,
                             onClick = { onQueryChange(query.dropLast(1)) },
                             modifier = Modifier.weight(1.5f)
                         )
@@ -132,10 +128,10 @@ fun KeyButton(
         modifier = modifier
             .padding(horizontal = 2.dp)
             .height(48.dp),
-        colors = ButtonDefaults.buttonColors(
-            backgroundColor = Color.White,
-            contentColor = Color.Black
-        ),
+//        colors = ButtonDefaults.buttonColors(
+//            backgroundColor = Color.White,
+//            contentColor = Color.Black
+//        ),
         shape = RoundedCornerShape(6.dp)
     ) {
         if (text != null) {

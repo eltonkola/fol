@@ -15,21 +15,18 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Send
-import androidx.compose.material.primarySurface
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -50,6 +47,7 @@ import com.fol.com.fol.model.AppsScreen
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ThreadScreen(
     navController: NavHostController,
@@ -57,11 +55,9 @@ fun ThreadScreen(
     viewModel: ThreadViewModel = viewModel { ThreadViewModel() },
     ) {
 
-    Scaffold(
+    Scaffold (
         topBar = {
             TopAppBar (
-                backgroundColor = MaterialTheme.colors.primarySurface,
-                contentColor = MaterialTheme.colors.onPrimary,
                 title = {
                     Text("Thread Screen - $userId")
                 },
@@ -193,17 +189,18 @@ fun ChatItem(message: ChatUiModel.Message) {
                         bottomEnd = if (message.isFromMe) 0f else 48f
                     )
                 )
-                .background(MaterialTheme.colors.primary)
+                .background(MaterialTheme.colorScheme.primary)
                 .padding(16.dp)
         ) {
             Text(
                 text = message.text,
-                color = MaterialTheme.colors.onPrimary,
+                color = MaterialTheme.colorScheme.onPrimary,
             )
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChatBox(
     onSendChatClickListener: (String) -> Unit,
@@ -239,13 +236,13 @@ fun ChatBox(
             },
             modifier = Modifier.size(32.dp)
                 .clip(CircleShape)
-                .background(color = MaterialTheme.colors.primary)
+                .background(color = MaterialTheme.colorScheme.primary)
                 .align(Alignment.CenterVertically)
         ) {
             Icon(
                 imageVector = Icons.Filled.Send,
                 contentDescription = "Send",
-                tint = MaterialTheme.colors.onPrimary,
+                tint = MaterialTheme.colorScheme.onPrimary,
                 modifier = Modifier.fillMaxSize().padding(8.dp)
             )
         }

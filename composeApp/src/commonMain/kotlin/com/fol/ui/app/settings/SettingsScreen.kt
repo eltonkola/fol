@@ -7,21 +7,23 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Switch
-import androidx.compose.material.SwitchDefaults
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.filled.ContentCopy
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -38,6 +40,7 @@ import androidx.navigation.NavHostController
 import com.dokar.sonner.Toaster
 import com.dokar.sonner.rememberToasterState
 import com.fol.com.fol.model.AppsScreen
+import com.fol.ui.theme.backgroundDark
 
 @Composable
 fun SettingsScreen(
@@ -83,6 +86,7 @@ fun SettingsScreen(
         }
     }
 
+    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     private fun SettingsScreen(
         data: SettingsUiState.Ready,
@@ -104,10 +108,11 @@ fun SettingsScreen(
                 }
             )
         },
-        content = {
+        content = { padding ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .padding(padding)
                     .padding(16.dp),
             ) {
 
@@ -119,11 +124,7 @@ fun SettingsScreen(
                     checked = data.systemTheme,
                     onCheckedChange = {
                         viewModel.updateSystemTheme(it)
-                    },
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = MaterialTheme.colors.primary,
-                        uncheckedThumbColor = MaterialTheme.colors.onBackground
-                    )
+                    }
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 if(!data.systemTheme) {
@@ -135,11 +136,7 @@ fun SettingsScreen(
                         checked = data.darkTheme,
                         onCheckedChange = {
                             viewModel.updateDarkTheme(it)
-                        },
-                        colors = SwitchDefaults.colors(
-                            checkedThumbColor = MaterialTheme.colors.primary,
-                            uncheckedThumbColor = MaterialTheme.colors.onBackground
-                        )
+                        }
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                 }
@@ -177,7 +174,7 @@ fun SettingsScreen(
                         clipboardManager.setText(AnnotatedString(data.user.publicKey))
                         toaster.show("Public key copied!")
                     }) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.Send, contentDescription = "Copy")
+                        Icon(imageVector = Icons.Default.ContentCopy, contentDescription = "Copy")
                     }
                 }
 
@@ -198,7 +195,7 @@ fun SettingsScreen(
                         clipboardManager.setText(AnnotatedString(data.user.privateKey))
                         toaster.show("private key copied!")
                     }) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.Send, contentDescription = "Copy")
+                        Icon(imageVector = Icons.Default.ContentCopy, contentDescription = "Copy")
                     }
                 }
 
@@ -216,7 +213,7 @@ fun SettingsScreen(
                     onClick = {
                         viewModel.deleteAccount()
                     },
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red)
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
                 ) {
                     Text("DELETE ACCOUNT")
                 }
