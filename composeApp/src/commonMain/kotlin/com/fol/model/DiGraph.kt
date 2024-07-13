@@ -9,17 +9,23 @@ import com.russhwolf.settings.Settings
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
-object DiGraph{
+object DiGraph {
 
     private val appDispatcher = Dispatchers.Main.limitedParallelism(100)
-    private val coroutineScope = CoroutineScope(appDispatcher)
+    private var coroutineScope = CoroutineScope(appDispatcher)
 
     private val settings: Settings = Settings()
-    private val dbManager : DbManager = DbManager()
-    private val contactsRepository = ContactsRepository(coroutineScope = coroutineScope)
+    private val dbManager: DbManager = DbManager()
+    val contactsRepository: ContactsRepository by lazy {
+        ContactsRepository(coroutineScope = coroutineScope, dbManager = dbManager)
+    }
     val appSettings = AppSettings(settings)
 
-    val accountRepository = AccountRepository(dbManager = dbManager, appSettings = appSettings)
-    val messagesRepository = MessagesRepository(contactsRepository = contactsRepository, coroutineScope = coroutineScope)
+    val accountRepository: AccountRepository by lazy {
+        AccountRepository(dbManager = dbManager, appSettings = appSettings)
+    }
+    val messagesRepository: MessagesRepository by lazy {
+        MessagesRepository(contactsRepository = contactsRepository, coroutineScope = coroutineScope)
+    }
 
 }

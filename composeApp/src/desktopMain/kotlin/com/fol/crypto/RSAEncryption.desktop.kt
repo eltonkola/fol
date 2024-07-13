@@ -77,12 +77,34 @@ actual class RSAEncryption actual constructor() {
         return this.signature.verify(Base64.getDecoder().decode(signature))
     }
 
-    actual suspend fun generateKeyPair(): Pair<String, String> {
+    actual suspend fun generateKeyPair(): UserKeys {
         val keyPairGenerator = KeyPairGenerator.getInstance("RSA")
         keyPairGenerator.initialize(2048)
         val keyPair = keyPairGenerator.generateKeyPair()
         val publicKey = Base64.getEncoder().encodeToString(keyPair.public.encoded)
         val privateKey = Base64.getEncoder().encodeToString(keyPair.private.encoded)
-        return Pair(publicKey, privateKey)
+        return UserKeys(
+            publicKey = publicKey,
+            privateKey = privateKey
+        )
+    }
+
+    actual suspend fun validatePublicKey(publicKeyBase64: String): Boolean {
+        return try {
+            // Decode the base64 string
+            val decoded = Base64.getDecoder().decode(publicKeyBase64)
+
+            // Generate the public key
+            val keySpec = X509EncodedKeySpec(decoded)
+            val keyFactory = KeyFactory.getInstance("RSA")
+            val publicKey = keyFactory.generatePublic(keySpec)
+
+            // Check validity
+            publicKey.encoded.isNotEmpty() && publicKey.algorithm == "RSA"
+        } catch (e: Exception) {
+            // Log the exception for debugging
+            println("PublicKeyValidation Validation error: ${e.message}")
+            false // If any exception occurs, the key is not valid
+        }
     }
 }

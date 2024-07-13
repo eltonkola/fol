@@ -1,21 +1,16 @@
 package com.fol.com.fol.model
 
+import com.fol.com.fol.db.AppContact
 import kotlinx.datetime.Instant
 
-
-data class Contact(
-    val name : String,
-    val publicKey : String
-)
-
 data class Thread(
-    val contact: Contact,
+    val contact: AppContact,
     val messages : List<Message>,
 )
 
 data class ThreadPreview(
     val id : String,
-    val contact: Contact,
+    val contact: AppContact,
     val lastMessage : Message,
 )
 

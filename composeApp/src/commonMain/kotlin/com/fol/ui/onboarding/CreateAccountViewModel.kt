@@ -37,8 +37,8 @@ class CreateAccountViewModel(
 
     fun generateKey(){
         viewModelScope.launch {
-            val (privateKey, publicKey) = CryptoManager.generateKeyPair()
-            _uiState.update { it.copy(publicKey = publicKey, privateKey = privateKey) }
+            val keys = CryptoManager.generateKeyPair()
+            _uiState.update { it.copy(publicKey = keys.publicKey, privateKey = keys.privateKey) }
         }
     }
 

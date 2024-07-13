@@ -85,6 +85,8 @@ kotlin {
             implementation(libs.qrose)
             implementation(libs.sonner)
 
+            implementation(libs.kermit)
+
         }
         desktopMain.dependencies {
             implementation(libs.kotlinx.coroutines.swing)

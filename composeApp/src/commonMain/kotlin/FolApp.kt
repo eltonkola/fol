@@ -16,7 +16,7 @@ import com.fol.com.fol.db.AppSettings
 import com.fol.com.fol.model.AppsScreen
 import com.fol.com.fol.model.DiGraph
 import com.fol.com.fol.ui.SplashScreen
-import com.fol.com.fol.ui.app.AddContactScreen
+import com.fol.com.fol.ui.app.addcontact.AddContactScreen
 import com.fol.com.fol.ui.app.MainScreen
 import com.fol.com.fol.ui.app.ThreadScreen
 import com.fol.com.fol.ui.app.profile.ProfileScreen

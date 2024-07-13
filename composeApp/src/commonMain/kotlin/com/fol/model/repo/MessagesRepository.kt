@@ -1,6 +1,6 @@
 package com.fol.com.fol.model.repo
 
-import com.fol.com.fol.model.Contact
+import com.fol.com.fol.db.AppContact
 import com.fol.com.fol.model.Message
 import com.fol.com.fol.model.ThreadPreview
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,14 +31,14 @@ class MessagesRepository(
             emptyList()
         }
 
-        contactsRepository.contacts.map { contacts ->
+        contactsRepository.allContacts.map { contacts ->
             _threadPreviews.update {
                 contacts.map { loadMessagePreview(it) }
             }
         }.stateIn(coroutineScope)
     }
 
-    private fun loadMessagePreview(contact: Contact) : ThreadPreview {
+    private fun loadMessagePreview(contact: AppContact) : ThreadPreview {
         return ThreadPreview(
             id = contact.name,
             contact = contact,

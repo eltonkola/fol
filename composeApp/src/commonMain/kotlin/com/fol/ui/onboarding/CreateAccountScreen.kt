@@ -14,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -115,7 +116,10 @@ private fun CreateUiScreen(
             ) {
                 Row {
 
-                    Column {
+                    Column(
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("Private key:")
                         TextField(
                             value = uiState.privateKey,
                             onValueChange = {},
@@ -125,6 +129,7 @@ private fun CreateUiScreen(
                             modifier = Modifier.fillMaxWidth()
                         )
                         Spacer(modifier = Modifier.height(16.dp))
+                        Text("Public key:")
                         TextField(
                             value = uiState.publicKey,
                             onValueChange = {},
@@ -136,16 +141,16 @@ private fun CreateUiScreen(
                         Spacer(modifier = Modifier.height(16.dp))
                     }
 
-                    Button(onClick = {
+                    IconButton(onClick = {
                         viewModel.generateKey()
                     }) {
-                        Text("Regenerate keys")
+                        Icon(
+                            imageVector = Icons.Default.Refresh,
+                            contentDescription = null
+                        )
                     }
 
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.Send,
-                        contentDescription = null
-                    )
+
 
                 }
 

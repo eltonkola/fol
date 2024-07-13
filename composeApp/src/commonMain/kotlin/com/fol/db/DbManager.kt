@@ -1,8 +1,13 @@
 package com.fol.com.fol.db
 
+import co.touchlab.kermit.Logger
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
 import io.realm.kotlin.ext.query
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+
+
 
 class DbManager {
 
@@ -84,6 +89,22 @@ class DbManager {
             this.deleteAll()
 
         }
+    }
+
+    fun addContact(name: String, publicKey: String) {
+        Logger.i { "addContact name: $name - realm: $realm" }
+         realm.writeBlocking {
+            val profile = query<AppContact>("publicKey == $0", publicKey).first().find() ?: AppContact()
+            copyToRealm(profile.apply {
+                this.name = name
+                this.publicKey = publicKey
+            })
+        }
+    }
+
+    fun contacts(): Flow<List<AppContact>> {
+        Logger.i { "contacts - realm: $realm" }
+        return realm.query<AppContact>().asFlow(emptyList()).map { it.list }
     }
 
 }
