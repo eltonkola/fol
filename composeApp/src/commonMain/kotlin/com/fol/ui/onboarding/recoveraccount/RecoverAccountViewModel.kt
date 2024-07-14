@@ -1,4 +1,4 @@
-package com.fol.com.fol.ui.onboarding
+package com.fol.com.fol.ui.onboarding.recoveraccount
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

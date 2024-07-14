@@ -1,4 +1,4 @@
-package com.fol.com.fol.ui.onboarding
+package com.fol.com.fol.ui.onboarding.createaccount
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -45,7 +44,7 @@ fun CreateAccountScreen(
     navController: NavHostController,
     viewModel: CreateAccountViewModel = viewModel { CreateAccountViewModel() },
 
-) {
+    ) {
     val uiState by viewModel.uiState.collectAsState()
     when (uiState.state) {
         is CreationState.Idle -> CreateUiScreen(navController, viewModel)

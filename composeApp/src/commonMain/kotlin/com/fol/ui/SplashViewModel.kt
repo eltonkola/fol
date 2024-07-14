@@ -2,6 +2,8 @@ package com.fol.com.fol.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.touchlab.kermit.Logger
+import com.fol.com.fol.db.DbManager
 import com.fol.com.fol.model.DiGraph
 import com.fol.model.repo.AccountRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,6 +18,7 @@ sealed class SplashOpState{
     data object NoAccount : SplashOpState()
     data object Error : SplashOpState()
     data object Pin : SplashOpState()
+    data object PinError : SplashOpState()
 }
 
 data class SplashUiState(
@@ -54,13 +57,25 @@ class SplashViewModel(
         try{
             _uiState.update { it.copy(state = SplashOpState.Loading) }
             val user = accountRepository.loadUser(_uiState.value.pin)
+            Logger.i{ "User: $user" }
             if(user != null){
-                _uiState.update { it.copy(state =SplashOpState.Ready) }
+                _uiState.update { it.copy(state = SplashOpState.Ready) }
             }else{
-                _uiState.update { it.copy(state =SplashOpState.NoAccount) }
+                _uiState.update { it.copy(state = SplashOpState.NoAccount) }
             }
         }catch(e: Exception){
-            _uiState.update { it.copy(state = SplashOpState.Error) }
+            Logger.e(e){ "error: ${e.message}" }
+            _uiState.update { it.copy(state = SplashOpState.PinError) }
+        }
+    }
+
+    fun retryPin() {
+        _uiState.update { it.copy(state = SplashOpState.Pin, pin = "") }
+    }
+
+    fun nuke() {
+        viewModelScope.launch {
+            accountRepository.deleteAccount()
         }
     }
 

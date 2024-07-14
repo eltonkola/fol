@@ -13,6 +13,8 @@ class AppMessage : RealmObject , Author {
     var message: String = ""
     var senderKey: String = ""
     var receiverKey: String = ""
+    var sent: Boolean = false
+    var received: Boolean = false
     var timeSent: RealmInstant = RealmInstant.now()
     private var typeString: String = MessageType.TEXT.state
 

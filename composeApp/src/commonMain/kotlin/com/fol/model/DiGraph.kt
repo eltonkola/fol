@@ -15,7 +15,7 @@ object DiGraph {
     private var coroutineScope = CoroutineScope(appDispatcher)
 
     private val settings: Settings = Settings()
-    private val dbManager: DbManager = DbManager()
+    val dbManager: DbManager = DbManager()
     val contactsRepository: ContactsRepository by lazy {
         ContactsRepository(coroutineScope = coroutineScope, dbManager = dbManager)
     }

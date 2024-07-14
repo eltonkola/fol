@@ -13,7 +13,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.KeyboardBackspace
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -31,7 +33,8 @@ import androidx.compose.ui.unit.sp
 fun KeyboardUi(
     query: String,
     onQueryChange: (String) -> Unit,
-    onDone: () -> Unit
+    onDone: () -> Unit,
+    actionName: String = "Done"
 ) {
     var isLetterKeyboard by remember { mutableStateOf(true) }
     var isCapsOn by remember { mutableStateOf(false) }
@@ -39,7 +42,7 @@ fun KeyboardUi(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color(0xFFE0E0E0))
+            .background(MaterialTheme.colorScheme.background)
     ) {
 
         Column(
@@ -85,7 +88,7 @@ fun KeyboardUi(
                         KeyButton(
                             icon = Icons.Default.KeyboardBackspace,
                             onClick = { onQueryChange(query.dropLast(1)) },
-                            modifier = Modifier.weight(1.5f)
+                            modifier = Modifier.weight(0.9f)
                         )
                     }
                 }
@@ -102,12 +105,12 @@ fun KeyboardUi(
                     modifier = Modifier.weight(1.5f)
                 )
                 KeyButton(
-                    text = "Space",
+                    text = "\\__________/",
                     onClick = { onQueryChange(query + " ") },
                     modifier = Modifier.weight(4f)
                 )
                 KeyButton(
-                    text = "Done",
+                    text = actionName,
                     onClick = onDone,
                     modifier = Modifier.weight(1.5f)
                 )
@@ -128,10 +131,10 @@ fun KeyButton(
         modifier = modifier
             .padding(horizontal = 2.dp)
             .height(48.dp),
-//        colors = ButtonDefaults.buttonColors(
-//            backgroundColor = Color.White,
-//            contentColor = Color.Black
-//        ),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+            contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+        ),
         shape = RoundedCornerShape(6.dp)
     ) {
         if (text != null) {

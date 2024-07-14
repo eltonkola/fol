@@ -30,6 +30,7 @@ class DbManager {
 
     private fun openDatabase(passcode: String) {
 
+
         val config = RealmConfiguration.Builder(
             schema = setOf(
                 AppContact::class,
@@ -41,6 +42,7 @@ class DbManager {
             .build()
 
         realm = Realm.open(config)
+       Logger.i { "openDatabase with passcode: $passcode - realm: $realm" }
     }
 
     fun op() {
@@ -98,6 +100,16 @@ class DbManager {
         realm.writeBlocking {
             this.deleteAll()
         }
+    }
+
+    fun nuke(){
+        Realm.deleteRealm(RealmConfiguration.Builder(
+            schema = setOf(
+                AppContact::class,
+                AppProfile::class,
+                AppMessage::class
+            )
+        ).build())
     }
 
     fun addContact(name: String, publicKey: String) {
