@@ -120,9 +120,15 @@ private fun ThreadRow(thread: ThreadPreview, onClick: (ThreadPreview) -> Unit ) 
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ){
 
+//        Identicon(
+//            address = thread.contact.publicKey,
+//            modifier = Modifier.size(64.dp)
+//        )
+
         Identicon(
-            address = thread.contact.publicKey,
-            modifier = Modifier.size(64.dp)
+            publicKeyHash = thread.contact.publicKey,
+            modifier = Modifier.size(64.dp),
+            userName = thread.contact.name
         )
 
         Column (
