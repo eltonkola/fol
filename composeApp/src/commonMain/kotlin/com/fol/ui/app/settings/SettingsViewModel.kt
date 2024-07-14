@@ -2,7 +2,7 @@ package com.fol.com.fol.ui.app.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fol.com.fol.db.AppProfile
+import com.fol.com.fol.db.model.AppProfile
 import com.fol.com.fol.db.AppSettings
 import com.fol.com.fol.model.DiGraph
 import com.fol.model.repo.AccountRepository

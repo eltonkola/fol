@@ -25,7 +25,7 @@ object DiGraph {
         AccountRepository(dbManager = dbManager, appSettings = appSettings)
     }
     val messagesRepository: MessagesRepository by lazy {
-        MessagesRepository(contactsRepository = contactsRepository, coroutineScope = coroutineScope)
+        MessagesRepository(contactsRepository = contactsRepository, coroutineScope = coroutineScope, dbManager = dbManager)
     }
 
 }

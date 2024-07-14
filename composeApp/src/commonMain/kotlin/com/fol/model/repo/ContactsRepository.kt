@@ -1,7 +1,7 @@
 package com.fol.com.fol.model.repo
 
 import co.touchlab.kermit.Logger
-import com.fol.com.fol.db.AppContact
+import com.fol.com.fol.db.model.AppContact
 import com.fol.com.fol.db.DbManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow

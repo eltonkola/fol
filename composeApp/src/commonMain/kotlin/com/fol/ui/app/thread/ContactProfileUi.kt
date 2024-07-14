@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dokar.sonner.Toaster
 import com.dokar.sonner.rememberToasterState
-import com.fol.com.fol.db.AppContact
+import com.fol.com.fol.db.model.AppContact
 import fol.composeapp.generated.resources.Res
 import fol.composeapp.generated.resources.compose_multiplatform
 import io.github.alexzhirkevich.qrose.options.QrBallShape

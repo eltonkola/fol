@@ -45,9 +45,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import com.fol.com.fol.model.AppsScreen
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.fol.com.fol.db.AppProfile
+import com.fol.com.fol.db.model.AppProfile
 import com.fol.com.fol.model.Message
 
 
