@@ -87,7 +87,6 @@ class DbManager {
     fun deleteAllData(){
         realm.writeBlocking {
             this.deleteAll()
-
         }
     }
 
@@ -105,6 +104,20 @@ class DbManager {
     fun contacts(): Flow<List<AppContact>> {
         Logger.i { "contacts - realm: $realm" }
         return realm.query<AppContact>().asFlow(emptyList()).map { it.list }
+    }
+
+    fun getContactById(userId: String): AppContact? {
+        Logger.i { "getContactById - userId: $userId" }
+        return realm.query<AppContact>("id == $0", userId).first().find()
+    }
+
+    fun deleteContactById(id: String) {
+        Logger.i { "deleteContactById - id: $id" }
+        realm.writeBlocking {
+            query<AppContact>("id == $0", id)
+                .first().find()
+                ?.let { delete(it) }
+        }
     }
 
 }

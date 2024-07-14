@@ -18,7 +18,7 @@ import com.fol.com.fol.model.DiGraph
 import com.fol.com.fol.ui.SplashScreen
 import com.fol.com.fol.ui.app.addcontact.AddContactScreen
 import com.fol.com.fol.ui.app.MainScreen
-import com.fol.com.fol.ui.app.ThreadScreen
+import com.fol.com.fol.ui.app.thread.ThreadScreen
 import com.fol.com.fol.ui.app.profile.ProfileScreen
 import com.fol.com.fol.ui.app.settings.SettingsScreen
 import com.fol.com.fol.ui.onboarding.CreateAccountScreen

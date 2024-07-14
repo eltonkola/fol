@@ -4,7 +4,7 @@ import io.realm.kotlin.types.RealmObject
 import io.realm.kotlin.types.RealmUUID
 import io.realm.kotlin.types.annotations.PrimaryKey
 
-class AppContact : RealmObject {
+class AppContact : RealmObject , Author {
     @PrimaryKey
     var id: String = RealmUUID.random().toString()
     var name: String = ""

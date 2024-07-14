@@ -1,12 +1,8 @@
 package com.fol.com.fol.model
 
 import com.fol.com.fol.db.AppContact
+import com.fol.com.fol.db.Author
 import kotlinx.datetime.Instant
-
-data class Thread(
-    val contact: AppContact,
-    val messages : List<Message>,
-)
 
 data class ThreadPreview(
     val id : String,
@@ -16,5 +12,6 @@ data class ThreadPreview(
 
 data class Message(
     val message : String,
-    val kur : Instant
+    val kur : Instant,
+    val author: Author
 )

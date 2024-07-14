@@ -1,4 +1,4 @@
-package com.fol.com.fol.ui.app
+package com.fol.com.fol.ui.app.thread
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -17,6 +17,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Person4
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -52,7 +54,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 fun ThreadScreen(
     navController: NavHostController,
     userId: String,
-    viewModel: ThreadViewModel = viewModel { ThreadViewModel() },
+    viewModel: ThreadViewModel = viewModel { ThreadViewModel(userId) },
     ) {
 
     Scaffold (
@@ -70,17 +72,27 @@ fun ThreadScreen(
                 },
                 actions = {
                     IconButton(onClick = {
-                        navController.navigate(AppsScreen.Profile.name)
+                        viewModel.showContact()
                     }){
-//                        Icon(Icons.Default.Person, contentDescription = "Profile")
+                        Icon(Icons.Default.Person4, contentDescription = "Profile")
                     }
-                }
+                    IconButton(onClick = {
+                        viewModel.onDeleteContact()
+                    }){
+                        Icon(Icons.Default.Delete, contentDescription = "Delete contact")
+                    }
+                },
             )
         },
 
     ) { innerPadding ->
 
+
+        val uiState by viewModel.uiState.collectAsState()
+
         val conversation = viewModel.conversation.collectAsState()
+        DeleteContactUi(viewModel, navController, uiState.contactStatus)
+
 
         ChatScreen(
             model = ChatUiModel(

@@ -3,7 +3,7 @@ package com.fol.com.fol.db
 import io.realm.kotlin.types.RealmObject
 import io.realm.kotlin.types.annotations.PrimaryKey
 
-class AppProfile : RealmObject {
+class AppProfile : RealmObject, Author {
     @PrimaryKey
     var id: String = INSTANCE_ID
     var privateKey: String = ""
@@ -13,3 +13,5 @@ class AppProfile : RealmObject {
         const val INSTANCE_ID = "user_profile"
     }
 }
+
+interface Author

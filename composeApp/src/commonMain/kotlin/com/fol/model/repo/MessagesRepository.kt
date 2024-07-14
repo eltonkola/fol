@@ -8,6 +8,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.datetime.Clock
@@ -27,23 +29,21 @@ class MessagesRepository(
     }
 
     private suspend fun loadThreads() {
-        _threadPreviews.update {
-            emptyList()
-        }
-
         contactsRepository.allContacts.map { contacts ->
             _threadPreviews.update {
-                contacts.map { loadMessagePreview(it) }
+                contacts.map { contact ->
+                    ThreadPreview(
+                        id = contact.id,
+                        contact = contact,
+                        lastMessage = Message("...", Clock.System.now() , contact)
+                    )
+                }
             }
         }.stateIn(coroutineScope)
     }
 
-    private fun loadMessagePreview(contact: AppContact) : ThreadPreview {
-        return ThreadPreview(
-            id = contact.name,
-            contact = contact,
-            lastMessage = Message("...", Clock.System.now() )
-        )
+    fun getThreads(targetUser: AppContact): Flow<List<Message>> {
+        return emptyFlow()
     }
 
 }
