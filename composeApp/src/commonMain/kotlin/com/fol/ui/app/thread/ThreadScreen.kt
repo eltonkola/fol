@@ -47,6 +47,8 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.fol.com.fol.model.AppsScreen
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.fol.com.fol.db.AppProfile
+import com.fol.com.fol.model.Message
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -87,18 +89,12 @@ fun ThreadScreen(
 
     ) { innerPadding ->
 
-
         val uiState by viewModel.uiState.collectAsState()
 
-        val conversation = viewModel.conversation.collectAsState()
         DeleteContactUi(viewModel, navController, uiState.contactStatus)
 
-
         ChatScreen(
-            model = ChatUiModel(
-                messages = conversation.value,
-                addressee = ChatUiModel.Author.bot
-            ),
+            model = uiState,
             onSendChatClickListener = { msg -> viewModel.sendChat(msg) },
             modifier = Modifier.fillMaxSize().padding(innerPadding)
         )
@@ -108,43 +104,9 @@ fun ThreadScreen(
 }
 
 
-data class ChatUiModel(
-    val messages: List<Message>,
-    val addressee: Author,
-) {
-    data class Message(
-        val text: String,
-        val author: Author,
-    ) {
-        val isFromMe: Boolean
-            get() = author.id == MY_ID
-
-        companion object {
-            val initConv = Message(
-                text = "Hi there, how you doing?",
-                author = Author.bot
-            )
-        }
-    }
-
-    data class Author(
-        val id: String,
-        val name: String
-    ) {
-        companion object {
-            val bot = Author("1", "Bot")
-            val me = Author(MY_ID, "Me")
-        }
-    }
-
-    companion object {
-        const val MY_ID = "-1"
-    }
-}
-
 @Composable
 fun ChatScreen(
-    model: ChatUiModel,
+    model: ThreadUiState,
     onSendChatClickListener: (String) -> Unit,
     modifier: Modifier
 ) {
@@ -169,7 +131,7 @@ fun ChatScreen(
             contentPadding = PaddingValues(16.dp)
         ) {
             items(model.messages) { item ->
-                ChatItem(item)
+                ChatItem(item, model.user)
             }
         }
         ChatBox(
@@ -185,27 +147,31 @@ fun ChatScreen(
     }
 }
 
+fun Message.isFromMe(user: AppProfile) : Boolean {
+    return author == user
+}
+
 @Composable
-fun ChatItem(message: ChatUiModel.Message) {
+fun ChatItem(message: Message, user: AppProfile) {
     Column(modifier = Modifier
         .fillMaxWidth()
         .padding(4.dp)) {
         Box(
             modifier = Modifier
-                .align(if (message.isFromMe) Alignment.End else Alignment.Start)
+                .align(if (message.isFromMe(user)) Alignment.End else Alignment.Start)
                 .clip(
                     RoundedCornerShape(
                         topStart = 48f,
                         topEnd = 48f,
-                        bottomStart = if (message.isFromMe) 48f else 0f,
-                        bottomEnd = if (message.isFromMe) 0f else 48f
+                        bottomStart = if (message.isFromMe(user)) 48f else 0f,
+                        bottomEnd = if (message.isFromMe(user)) 0f else 48f
                     )
                 )
                 .background(MaterialTheme.colorScheme.primary)
                 .padding(16.dp)
         ) {
             Text(
-                text = message.text,
+                text = message.message,
                 color = MaterialTheme.colorScheme.onPrimary,
             )
         }

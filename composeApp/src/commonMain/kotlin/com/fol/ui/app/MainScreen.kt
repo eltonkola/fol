@@ -13,7 +13,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Key
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CircularProgressIndicator
@@ -27,16 +26,14 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.fol.com.fol.crypto.CryptoManager
+import androidx.navigation.NavHostController
 import com.fol.com.fol.model.AppsScreen
 import com.fol.com.fol.model.ThreadPreview
-import kotlinx.coroutines.launch
+import com.fol.ui.elements.Identicon
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -120,10 +117,11 @@ private fun ThreadRow(thread: ThreadPreview, onClick: (ThreadPreview) -> Unit ) 
 
     Row(
         modifier = Modifier.fillMaxWidth(1f).clickable { onClick(thread) },
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
     ){
-        Icon(
-            Icons.Default.Person,
-            contentDescription = "Avatar",
+
+        Identicon(
+            address = thread.contact.publicKey,
             modifier = Modifier.size(64.dp)
         )
 
