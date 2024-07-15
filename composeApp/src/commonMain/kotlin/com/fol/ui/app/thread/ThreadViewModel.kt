@@ -2,8 +2,10 @@ package com.fol.com.fol.ui.app.thread
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fol.com.fol.db.AppContact
-import com.fol.com.fol.db.AppProfile
+import com.fol.com.fol.db.model.AppContact
+import com.fol.com.fol.db.model.AppMessage
+import com.fol.com.fol.db.model.AppProfile
+import com.fol.com.fol.db.model.normalize
 import com.fol.com.fol.model.DiGraph
 import com.fol.com.fol.model.Message
 import com.fol.com.fol.model.repo.ContactsRepository
@@ -78,10 +80,22 @@ class ThreadViewModel(
 
                 _uiState.update { it.copy(contact = targetUser) }
 
-                messagesRepository.getThreads(targetUser)
+                messagesRepository.getMessagesFroThread(targetUser, uiState.value.user)
                     .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
                     .collect { messages ->
-                        _uiState.update { it.copy(messages = messages) }
+                        _uiState.update {
+                            it.copy(
+                                messages = messages.map { message ->
+                                    message.normalize{ key ->
+                                        if(uiState.value.user.publicKey == key){
+                                            uiState.value.user
+                                        } else{
+                                            _uiState.value.contact!!
+                                        }
+                                    }
+                                }
+                            )
+                        }
                     }
 
             }else{
@@ -92,14 +106,27 @@ class ThreadViewModel(
     }
 
     fun sendChat(msg: String) {
-
-//        val myChat = ChatUiModel.Message(msg, ChatUiModel.Author.me)
         viewModelScope.launch {
-//            _conversation.emit(_conversation.value + myChat)
+            val message = AppMessage().apply {
+                message = msg
+                senderKey = uiState.value.user.publicKey
+                receiverKey = uiState.value.contact!!.publicKey
+            }
+            messagesRepository.addMessage(message)
 
-            delay(1000)
-//            _conversation.emit(_conversation.value + getRandomQuestion())
+            delay(1_000)
+            fakeEchoResponse()
         }
+    }
+
+    private fun fakeEchoResponse(){
+        val message = AppMessage().apply {
+            message = "Ja ke fut kot plako!"
+            senderKey = uiState.value.contact!!.publicKey
+            receiverKey = uiState.value.user.publicKey
+        }
+        messagesRepository.addMessage(message)
+
     }
 
 }

@@ -2,16 +2,13 @@ package com.fol
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -25,10 +22,9 @@ import com.fol.com.fol.ui.app.MainScreen
 import com.fol.com.fol.ui.app.thread.ThreadScreen
 import com.fol.com.fol.ui.app.profile.ProfileScreen
 import com.fol.com.fol.ui.app.settings.SettingsScreen
-import com.fol.com.fol.ui.onboarding.CreateAccountScreen
+import com.fol.com.fol.ui.onboarding.createaccount.CreateAccountScreen
 import com.fol.com.fol.ui.onboarding.LandingScreen
-import com.fol.com.fol.ui.onboarding.RecoverAccountScreen
-import com.fol.ui.elements.Identicon
+import com.fol.com.fol.ui.onboarding.recoveraccount.RecoverAccountScreen
 import com.fol.ui.theme.AppTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 

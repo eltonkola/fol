@@ -10,4 +10,59 @@
     <string name="screen_add_contact">Add contact</string>
     <string name="screen_profile">Profile</string>
     <string name="screen_settings">Settings</string>
+
+    <string name="terms_title">Terms fo service</string>
+    <string name="terms_body">
+Welcome to FOL, a privacy-focused messaging application designed to protect your communications. By using FOL, you agree to the following terms of service:
+
+1. Acceptance of Terms
+By downloading, installing, or using the FOL app, you agree to be bound by these terms of service. If you do not agree, do not use the app.
+
+2. Privacy and Data Encryption
+2.1 Local Data Encryption: All data stored locally on your device is encrypted using a password you set. It is your responsibility to remember this password. If you lose or forget your password, the data will be irretrievable and permanently lost.
+
+2.2 Account and Public Profile Key: Your user account is identified by a public profile key. This key is used to encrypt all messages.
+
+3. Server-Side Data Handling
+3.1 Message Storage: The server stores copies of sent messages that have not yet been received by the recipient. These messages are stored in an encrypted format.
+
+3.2 Message Deletion: Once a message is delivered to the recipient, it is deleted from the server.
+
+4. User Responsibilities
+4.1 Password Security: You are responsible for maintaining the confidentiality of your password. FOL is not liable for any loss of data resulting from forgotten or lost passwords.
+
+4.2 Account Information: You are responsible for the accuracy of the information you provide. Any misuse or illegal activities conducted using your account will be your responsibility.
+
+5. Data Security
+FOL employs strong encryption protocols to protect your data. However, no method of transmission or storage is completely secure. While we strive to use commercially acceptable means to protect your personal data, we cannot guarantee its absolute security.
+
+6. Prohibited Activities
+You agree not to use FOL for any unlawful purposes or activities, including but not limited to:
+
+Harassment or abuse of other users.
+Sending spam or unsolicited messages.
+Distributing malicious software or engaging in hacking activities.
+7. Termination
+FOL reserves the right to suspend or terminate your access to the app at any time, without prior notice, for any conduct that we believe violates these terms or is harmful to other users of the app.
+
+8. Limitation of Liability
+FOL shall not be liable for any direct, indirect, incidental, special, or consequential damages resulting from:
+
+Your use or inability to use the app.
+Any unauthorized access to or alteration of your data.
+Any other matter relating to the app.
+9. Amendments
+FOL reserves the right to modify these terms of service at any time. We will notify you of any changes by posting the new terms on the app. Your continued use of the app after such modifications constitutes your acceptance of the new terms.
+
+10. Governing Law
+These terms of service shall be governed and construed in accordance with the laws of [Your Country/State], without regard to its conflict of law principles.
+
+11. Contact Us
+If you have any questions about these terms, please contact us at [Your Contact Information].
+
+By using FOL, you acknowledge that you have read, understood, and agree to be bound by these terms of service.
+
+Last Updated: 7/14/2024
+    </string>
+
 </resources>

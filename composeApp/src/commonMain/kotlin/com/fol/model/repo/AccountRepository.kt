@@ -1,6 +1,6 @@
 package com.fol.model.repo
 
-import com.fol.com.fol.db.AppProfile
+import com.fol.com.fol.db.model.AppProfile
 import com.fol.com.fol.db.AppSettings
 import com.fol.com.fol.db.DbManager
 

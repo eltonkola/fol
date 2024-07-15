@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -38,7 +37,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.dokar.sonner.Toaster
 import com.dokar.sonner.rememberToasterState
-import com.fol.com.fol.db.AppProfile
+import com.fol.com.fol.db.model.AppProfile
 import fol.composeapp.generated.resources.Res
 import fol.composeapp.generated.resources.compose_multiplatform
 import io.github.alexzhirkevich.qrose.options.QrBallShape
@@ -91,7 +90,7 @@ private fun ErrorScreen() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SelfProfileScreen(user: AppProfile,  navController: NavHostController) {
+private fun SelfProfileScreen(user: AppProfile, navController: NavHostController) {
 
     val clipboardManager = LocalClipboardManager.current
 

@@ -1,4 +1,4 @@
-package com.fol.com.fol.ui.onboarding
+package com.fol.com.fol.ui.onboarding.createaccount
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -52,9 +52,9 @@ class CreateAccountViewModel(
                     pin = _uiState.value.pin
                 )
                 if(user != null){
-                    _uiState.update { it.copy(state =CreationState.Created) }
+                    _uiState.update { it.copy(state = CreationState.Created) }
                 }else{
-                    _uiState.update { it.copy(state =CreationState.Error) }
+                    _uiState.update { it.copy(state = CreationState.Error) }
                 }
             }catch(e: Exception){
                 e.printStackTrace()
@@ -64,7 +64,7 @@ class CreateAccountViewModel(
     }
 
     fun resetForm(){
-        _uiState.update { it.copy(state =CreationState.Idle) }
+        _uiState.update { it.copy(state = CreationState.Idle) }
     }
 
     fun updatePin(pin: String) {

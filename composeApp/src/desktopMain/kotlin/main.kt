@@ -10,7 +10,7 @@ import org.jetbrains.compose.resources.stringResource
 
 fun main() = application {
     val windowState = rememberWindowState(
-        size = DpSize(600.dp, 800.dp)
+        size = DpSize(500.dp, 600.dp)
     )
     Window(
         onCloseRequest = ::exitApplication,

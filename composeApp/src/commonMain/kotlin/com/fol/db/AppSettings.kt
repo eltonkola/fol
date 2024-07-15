@@ -1,5 +1,6 @@
 package com.fol.com.fol.db
 
+import co.touchlab.kermit.Logger
 import com.russhwolf.settings.Settings
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,14 +22,29 @@ class AppSettings(private val settings: Settings) {
         const val USER_CREATED = "USER_CREATED"
         const val DARK_THEME = "dark_theme"
         const val SYSTEM_THEME = "system_theme"
+        const val ACCEPTED_TERMS = "ACCEPTED_TERMS"
     }
 
     fun accountExists() : Boolean {
-        return settings.getBoolean(USER_CREATED, false)
+        val accountExists =  settings.getBoolean(USER_CREATED, false)
+        Logger.i { "accountExists: $accountExists" }
+        return accountExists
     }
 
     fun setAccountExists(created: Boolean) {
+        Logger.i { "setAccountExists: $created" }
         settings.putBoolean(USER_CREATED, created)
+    }
+
+    fun acceptedTerms() : Boolean {
+        val acceptedTerms =  settings.getBoolean(ACCEPTED_TERMS, false)
+        Logger.i { "acceptedTerms: $acceptedTerms" }
+        return acceptedTerms
+    }
+
+    fun setAcceptTerms(accepted: Boolean) {
+        Logger.i { "setAcceptTerms: $accepted" }
+        settings.putBoolean(ACCEPTED_TERMS, accepted)
     }
 
     fun isDarkTheme(): Boolean {

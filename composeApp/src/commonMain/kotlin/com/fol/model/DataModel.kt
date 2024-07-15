@@ -1,7 +1,7 @@
 package com.fol.com.fol.model
 
-import com.fol.com.fol.db.AppContact
-import com.fol.com.fol.db.Author
+import com.fol.com.fol.db.model.AppContact
+import com.fol.com.fol.db.model.Author
 import kotlinx.datetime.Instant
 
 data class ThreadPreview(
@@ -15,3 +15,4 @@ data class Message(
     val kur : Instant,
     val author: Author
 )
+

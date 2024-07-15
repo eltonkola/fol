@@ -1,6 +1,10 @@
 package com.fol.com.fol.model.repo
 
-import com.fol.com.fol.db.AppContact
+import co.touchlab.kermit.Logger
+import com.fol.com.fol.db.DbManager
+import com.fol.com.fol.db.model.AppContact
+import com.fol.com.fol.db.model.AppMessage
+import com.fol.com.fol.db.model.AppProfile
 import com.fol.com.fol.model.Message
 import com.fol.com.fol.model.ThreadPreview
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +20,8 @@ import kotlinx.datetime.Clock
 
 class MessagesRepository(
     private val coroutineScope: CoroutineScope,
-    private val contactsRepository : ContactsRepository
+    private val contactsRepository : ContactsRepository,
+    private val dbManager: DbManager
 ) {
 
     private val _threadPreviews = MutableStateFlow(emptyList<ThreadPreview>())
@@ -42,8 +47,13 @@ class MessagesRepository(
         }.stateIn(coroutineScope)
     }
 
-    fun getThreads(targetUser: AppContact): Flow<List<Message>> {
-        return emptyFlow()
+    fun getMessagesFroThread(targetUser: AppContact, sender: AppProfile): Flow<List<AppMessage>> {
+        return dbManager.getMessages(targetUser.publicKey, sender.publicKey)
+    }
+
+    fun addMessage(message: AppMessage) {
+        Logger.i{ "sendMessage message: $message" }
+        dbManager.addMessage(message)
     }
 
 }

@@ -1,4 +1,4 @@
-package com.fol.com.fol.db
+package com.fol.com.fol.db.model
 
 import io.realm.kotlin.types.RealmObject
 import io.realm.kotlin.types.RealmUUID

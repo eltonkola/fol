@@ -1,6 +1,10 @@
 package com.fol.com.fol.db
 
 import co.touchlab.kermit.Logger
+import com.fol.com.fol.db.model.AppContact
+import com.fol.com.fol.db.model.AppMessage
+import com.fol.com.fol.db.model.AppProfile
+import com.fol.com.fol.model.Message
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
 import io.realm.kotlin.ext.query
@@ -26,11 +30,19 @@ class DbManager {
 
     private fun openDatabase(passcode: String) {
 
-        val config = RealmConfiguration.Builder(schema = setOf(AppContact::class, AppProfile::class))
+
+        val config = RealmConfiguration.Builder(
+            schema = setOf(
+                AppContact::class,
+                AppProfile::class,
+                AppMessage::class
+            )
+        )
             .encryptionKey(getEncryptionKey(passcode))
             .build()
 
         realm = Realm.open(config)
+       Logger.i { "openDatabase with passcode: $passcode - realm: $realm" }
     }
 
     fun op() {
@@ -90,6 +102,16 @@ class DbManager {
         }
     }
 
+    fun nuke(){
+        Realm.deleteRealm(RealmConfiguration.Builder(
+            schema = setOf(
+                AppContact::class,
+                AppProfile::class,
+                AppMessage::class
+            )
+        ).build())
+    }
+
     fun addContact(name: String, publicKey: String) {
         Logger.i { "addContact name: $name - realm: $realm" }
          realm.writeBlocking {
@@ -118,6 +140,20 @@ class DbManager {
                 .first().find()
                 ?.let { delete(it) }
         }
+    }
+
+    fun addMessage(message: AppMessage) {
+        realm.writeBlocking {
+            copyToRealm(message)
+        }
+    }
+
+    fun getMessages(receiverKey: String, senderKey: String): Flow<List<AppMessage>> {
+        return realm.query<AppMessage>(
+            "senderKey == $0 AND receiverKey == $1 OR senderKey == $1 AND receiverKey == $0",
+            senderKey, receiverKey
+        ).asFlow()
+            .map { it.list }
     }
 
 }
