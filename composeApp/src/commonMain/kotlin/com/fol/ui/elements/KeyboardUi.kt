@@ -3,11 +3,13 @@ package com.fol.com.fol.ui.elements
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowUp
@@ -23,7 +25,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -34,13 +35,15 @@ fun KeyboardUi(
     query: String,
     onQueryChange: (String) -> Unit,
     onDone: () -> Unit,
-    actionName: String = "Done"
+    actionName: String = "Done",
+    validInput: Boolean = true,
+    modifier : Modifier = Modifier
 ) {
     var isLetterKeyboard by remember { mutableStateOf(true) }
     var isCapsOn by remember { mutableStateOf(false) }
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.background)
     ) {
@@ -48,7 +51,7 @@ fun KeyboardUi(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 4.dp, vertical = 8.dp)
+                .padding(horizontal = 0.dp, vertical = 0.dp)
         ) {
             val keys = if (isLetterKeyboard) {
                 listOf(
@@ -76,13 +79,19 @@ fun KeyboardUi(
                             modifier = Modifier.weight(1.5f)
                         )
                     }
-                    row.forEach { key ->
+                    row.forEachIndexed { indexRow,  key ->
+                        if(index == 1 && isLetterKeyboard && indexRow == 0){
+                            Spacer(modifier = Modifier.size(16.dp))
+                        }
                         val displayKey = if (isLetterKeyboard && !isCapsOn) key.lowercase() else key
                         KeyButton(
                             text = displayKey,
                             onClick = { onQueryChange(query + displayKey) },
                             modifier = Modifier.weight(1f)
                         )
+                        if(index == 1  && isLetterKeyboard && indexRow == row.size - 1){
+                            Spacer(modifier = Modifier.size(16.dp))
+                        }
                     }
                     if (index == 2) {
                         KeyButton(
@@ -112,7 +121,8 @@ fun KeyboardUi(
                 KeyButton(
                     text = actionName,
                     onClick = onDone,
-                    modifier = Modifier.weight(1.5f)
+                    modifier = Modifier.weight(1.5f),
+                    enabled = validInput
                 )
             }
         }
@@ -124,23 +134,31 @@ fun KeyButton(
     text: String? = null,
     icon: ImageVector? = null,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true
 ) {
     Button(
         onClick = onClick,
         modifier = modifier
-            .padding(horizontal = 2.dp)
-            .height(48.dp),
+            .padding(horizontal = 4.dp)
+            .height(36.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.secondaryContainer,
             contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
         ),
-        shape = RoundedCornerShape(6.dp)
+        enabled = enabled,
+        shape = RoundedCornerShape(4.dp),
+        contentPadding =  PaddingValues(
+            start = 2.dp,
+            top = 2.dp,
+            end = 2.dp,
+            bottom = 2.dp
+        ),
     ) {
         if (text != null) {
             Text(
                 text = text,
-                fontSize = 16.sp,
+                fontSize = 14.sp,
                 fontWeight = FontWeight.Bold
             )
         } else if (icon != null) {

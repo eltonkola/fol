@@ -90,7 +90,7 @@ fun LandingScreen(
                 text = "Fortress of Lines",
                 fontSize = 32.sp
             )
-            
+
             Spacer(modifier = Modifier.weight(0.5f))
 
             Spacer(modifier = Modifier.size(16.dp))

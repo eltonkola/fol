@@ -1,5 +1,6 @@
 package com.fol.com.fol.ui.onboarding.createaccount
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,6 +14,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.filled.ContentCopy
+import androidx.compose.material.icons.filled.ImportExport
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -31,11 +34,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.dokar.sonner.Toaster
+import com.dokar.sonner.rememberToasterState
 import com.fol.com.fol.model.AppsScreen
 import com.fol.com.fol.ui.elements.KeyboardUi
 
@@ -71,14 +78,14 @@ private fun LoadingScreen() {
 private fun ErrorScreen(
     viewModel: CreateAccountViewModel
 ) {
-    Column (
+    Column(
         modifier = Modifier.fillMaxSize(),
     ) {
         Text("Error creating account!")
 
         Button(onClick = {
             viewModel.resetForm()
-        }){
+        }) {
             Text("Retry")
         }
     }
@@ -92,130 +99,128 @@ private fun CreateUiScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
+    val clipboardManager = LocalClipboardManager.current
+    val toaster = rememberToasterState()
+
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Create Account Screen") },
+                title = { Text("Create Account") },
                 navigationIcon = {
                     IconButton(onClick = {
                         navController.popBackStack()
                     }) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back"
+                        )
                     }
                 }
             )
         },
-        content = {
+        snackbarHost = {
+            Toaster(state = toaster)
+        },
+        content = { padding ->
             Column(
-                modifier = Modifier
+                modifier = Modifier.padding(padding)
                     .fillMaxSize()
                     .padding(16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Row {
 
-                    Column(
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text("Private key:")
-                        TextField(
-                            value = uiState.privateKey,
-                            onValueChange = {},
-                            readOnly = true,
-                            maxLines = 3,
-                            textStyle = TextStyle(fontSize = 10.sp),
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Text("Public key:")
-                        TextField(
-                            value = uiState.publicKey,
-                            onValueChange = {},
-                            readOnly = true,
-                            maxLines = 3,
-                            textStyle = TextStyle(fontSize = 10.sp),
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                        Spacer(modifier = Modifier.height(16.dp))
-                    }
-
-                    IconButton(onClick = {
-                        viewModel.generateKey()
-                    }) {
-                        Icon(
-                            imageVector = Icons.Default.Refresh,
-                            contentDescription = null
-                        )
-                    }
-
-
-
-                }
-
-                var isKeyboardOpened by remember { mutableStateOf(true) }
-
-                if(uiState.pin.length < 6){
-                    Text("Pin needs to be 6 chars: ${uiState.pin.length}/6")
-                }
-
-
-                Row {
-
-                    TextField(
-                        value = uiState.pin,
-                        onValueChange = {},
-                        readOnly = true,
-                        maxLines = 1,
-                        modifier = Modifier.weight(1f)
-                    )
-
-                    if(!isKeyboardOpened){
+                Text("Create a new account, by generating a new pair of keys and a password!")
+                TextField(
+                    value = uiState.privateKey,
+                    onValueChange = {},
+                    readOnly = true,
+                    maxLines = 3,
+                    textStyle = TextStyle(fontSize = 10.sp),
+                    modifier = Modifier.fillMaxWidth(),
+                    label = {
+                        Text("Private key")
+                    },
+                    trailingIcon = {
                         IconButton({
-                            isKeyboardOpened = true
-                        }){
+                            clipboardManager.setText(AnnotatedString(uiState.privateKey))
+                            toaster.show("Private key copied!")
+                        }) {
                             Icon(
-                                imageVector = Icons.AutoMirrored.Filled.List,
-                                contentDescription = null
+                                imageVector = Icons.Default.ContentCopy,
+                                contentDescription = "Copy"
                             )
                         }
-                    }
-
-                }
-
-                if(isKeyboardOpened){
-                    Spacer(modifier = Modifier.height(32.dp))
-                    KeyboardUi(
-                        query = uiState.pin,
-                        onQueryChange = { viewModel.updatePin(it) },
-                        onDone = {
-                            isKeyboardOpened = false
+                    },
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                TextField(
+                    value = uiState.publicKey,
+                    onValueChange = {},
+                    readOnly = true,
+                    maxLines = 3,
+                    textStyle = TextStyle(fontSize = 10.sp),
+                    modifier = Modifier.fillMaxWidth(),
+                    label = {
+                        Text("Public key")
+                    },
+                    trailingIcon = {
+                        IconButton({
+                            clipboardManager.setText(AnnotatedString(uiState.publicKey))
+                            toaster.show("Public key copied!")
+                        }) {
+                            Icon(
+                                imageVector = Icons.Default.ContentCopy,
+                                contentDescription = "Copy"
+                            )
                         }
-                    )
-
-                }
-
-                Row (
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    modifier = Modifier.fillMaxWidth()
+                    },
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
                 ) {
 
-                    Spacer(modifier = Modifier.width(16.dp))
-
-
-                    Button(
-                        enabled = uiState.pin.length == 6,
-                        onClick = {
-                        viewModel.createAccount()
+                    Button(onClick = {
+                        viewModel.generateKey()
                     }) {
-                        Text("Create Account")
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(16.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(imageVector = Icons.Default.Refresh, contentDescription = null)
+                            Text("Generate a new pair of keys")
+                        }
                     }
-
                 }
 
+                Spacer(modifier = Modifier.weight(1f))
+
+                TextField(
+                    value = uiState.pin,
+                    onValueChange = {},
+                    readOnly = true,
+                    maxLines = 1,
+                    modifier = Modifier.fillMaxWidth(),
+                    label = {
+                        Text("Password needs to be $PASSWORD_LENGTH chars: ${uiState.pin.length}/$PASSWORD_LENGTH")
+                    }
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                KeyboardUi(
+                    modifier = Modifier.fillMaxWidth(),
+                    query = uiState.pin,
+                    onQueryChange = { viewModel.updatePin(it) },
+                    onDone = {
+                        viewModel.createAccount()
+                    },
+                    actionName = "Create",
+                    validInput = uiState.pin.length >= PASSWORD_LENGTH
+                )
 
             }
         }
     )
 
 }
+
+const val PASSWORD_LENGTH = 6
