@@ -3,7 +3,6 @@ package com.fol.com.fol.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
-import com.fol.com.fol.db.DbManager
 import com.fol.com.fol.model.DiGraph
 import com.fol.model.repo.AccountRepository
 import kotlinx.coroutines.flow.MutableStateFlow

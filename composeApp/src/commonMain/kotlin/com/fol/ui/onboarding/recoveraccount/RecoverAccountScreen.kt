@@ -9,16 +9,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ContentCopy
-import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -33,8 +33,8 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.dokar.sonner.Toaster
 import com.dokar.sonner.rememberToasterState
 import com.fol.com.fol.model.AppsScreen
@@ -47,11 +47,11 @@ fun RecoverAccountScreen(
     viewModel: RecoverAccountViewModel = viewModel { RecoverAccountViewModel() },
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    when (uiState) {
-        is RecoverAccountUiState.Idle -> RecoverUiScreen(navController, viewModel)
-        is RecoverAccountUiState.Creating -> LoadingScreen()
-        is RecoverAccountUiState.Error -> ErrorScreen(viewModel)
-        is RecoverAccountUiState.Recovered -> {
+    when (uiState.state) {
+        is RecoveryState.Idle -> RecoverUiScreen(navController, viewModel)
+        is RecoveryState.Recovering -> LoadingScreen()
+        is RecoveryState.Error -> ErrorScreen(viewModel)
+        is RecoveryState.Recovered -> {
             navController.navigate(AppsScreen.Main.name)
         }
     }
@@ -94,7 +94,7 @@ private fun RecoverUiScreen(
                     .padding(16.dp),
             ) {
 
-                Text("Create a new account, by generating a new pair of keys and a password!")
+                Text("Import an existing account, by pasting your keys and entering a password!")
                 TextField(
                     value = uiState.privateKey,
                     onValueChange = {},
@@ -107,8 +107,8 @@ private fun RecoverUiScreen(
                     },
                     trailingIcon = {
                         IconButton({
-                            clipboardManager.setText(AnnotatedString(uiState.privateKey))
-                            toaster.show("Private key copied!")
+                            clipboardManager.getText()?.let { viewModel.updatePrivateKey(it.toString()) }
+                            toaster.show("Private key pasted!")
                         }) {
                             Icon(
                                 imageVector = Icons.Default.ContentCopy,
@@ -130,8 +130,8 @@ private fun RecoverUiScreen(
                     },
                     trailingIcon = {
                         IconButton({
-                            clipboardManager.setText(AnnotatedString(uiState.publicKey))
-                            toaster.show("Public key copied!")
+                            clipboardManager.getText()?.let { viewModel.updatePublicKey(it.toString()) }
+                            toaster.show("Public key pasted!")
                         }) {
                             Icon(
                                 imageVector = Icons.Default.ContentCopy,
@@ -145,17 +145,9 @@ private fun RecoverUiScreen(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
                 ) {
-
-                    Button(onClick = {
-                        viewModel.generateKey()
-                    }) {
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(16.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(imageVector = Icons.Default.Refresh, contentDescription = null)
-                            Text("Generate a new pair of keys")
-                        }
+                    if(uiState.invalidMessage != null) {
+                        Icon(imageVector = Icons.Default.Error, contentDescription = null)
+                        Text(uiState.invalidMessage!!, color = MaterialTheme.colorScheme.error)
                     }
                 }
 
@@ -177,9 +169,9 @@ private fun RecoverUiScreen(
                     query = uiState.pin,
                     onQueryChange = { viewModel.updatePin(it) },
                     onDone = {
-                        viewModel.createAccount()
+                        viewModel.recoverAccount()
                     },
-                    actionName = "Create",
+                    actionName = "Import",
                     validInput = uiState.pin.length >= PASSWORD_LENGTH
                 )
 

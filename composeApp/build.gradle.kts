@@ -59,7 +59,8 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.kotlinx.coroutines.android)
 
-
+            implementation(libs.ktor.client.android)
+            implementation(libs.io.ktor.ktor.client.websockets7)
         }
         
         commonMain.dependencies {
@@ -87,19 +88,29 @@ kotlin {
 
             implementation(libs.kermit)
 
+            implementation(libs.ktor.client.core)
+            implementation(libs.io.ktor.ktor.client.websockets7)
+            implementation(libs.kotlinx.coroutines.core)
+
         }
+
         desktopMain.dependencies {
             implementation(libs.kotlinx.coroutines.swing)
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
+
+            implementation(libs.ktor.client.cio)
+            implementation(libs.io.ktor.ktor.client.websockets7)
         }
 
         iosMain.dependencies {
-
+            implementation(libs.ktor.client.ios)
+            implementation(libs.io.ktor.ktor.client.websockets7)
         }
 
         wasmJsMain.dependencies {
-
+            implementation(libs.ktor.client.js)
+            implementation(libs.io.ktor.ktor.client.websockets7)
         }
 
     }

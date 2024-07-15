@@ -93,4 +93,8 @@ object CryptoManager {
         return rsaEncryption.validatePublicKey(publicKey)
     }
 
+    suspend fun validatePrivateKey(privateKey: String): Boolean {
+        return rsaEncryption.validatePrivateKey(privateKey)
+    }
+
 }

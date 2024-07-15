@@ -4,6 +4,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import java.security.KeyFactory
 import java.security.KeyPairGenerator
+import java.security.PrivateKey
 import java.security.SecureRandom
 import java.security.Signature
 import java.security.spec.PKCS8EncodedKeySpec
@@ -108,6 +109,25 @@ actual class RSAEncryption actual constructor() {
         } catch (e: Exception) {
             // Log the exception for debugging
             println("PublicKeyValidation Validation error: ${e.message}")
+            false // If any exception occurs, the key is not valid
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    actual suspend fun validatePrivateKey(privateKeyBase64: String): Boolean {
+        return try {
+            // Decode the base64 string
+            val decoded = Base64.getDecoder().decode(privateKeyBase64)
+
+            // Generate the private key
+            val keySpec = PKCS8EncodedKeySpec(decoded)
+            val keyFactory = KeyFactory.getInstance("RSA")
+            val privateKey: PrivateKey = keyFactory.generatePrivate(keySpec)
+
+            // Optionally, you can check the key's validity or parameters here
+            privateKey.encoded.isNotEmpty() && privateKey.algorithm == "RSA"
+        } catch (e: Exception) {
+            e.printStackTrace()
             false // If any exception occurs, the key is not valid
         }
     }

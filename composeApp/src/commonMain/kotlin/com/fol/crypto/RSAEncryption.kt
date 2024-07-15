@@ -7,6 +7,7 @@ expect class RSAEncryption() {
     suspend fun verifyWithPublicKey(publicKeyBase64: String, message: String, signature: String): Boolean
     suspend fun generateKeyPair(): UserKeys
     suspend fun validatePublicKey(publicKeyBase64: String): Boolean
+    suspend fun validatePrivateKey(privateKeyBase64: String): Boolean
 }
 
 data class UserKeys(

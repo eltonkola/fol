@@ -5,6 +5,8 @@ import com.fol.com.fol.db.DbManager
 import com.fol.com.fol.model.repo.ContactsRepository
 import com.fol.model.repo.AccountRepository
 import com.fol.com.fol.model.repo.MessagesRepository
+import com.fol.com.fol.network.NetworkManager
+import com.fol.network.createHttpClient
 import com.russhwolf.settings.Settings
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -20,6 +22,8 @@ object DiGraph {
         ContactsRepository(coroutineScope = coroutineScope, dbManager = dbManager)
     }
     val appSettings = AppSettings(settings)
+
+    val networkManager : NetworkManager = NetworkManager(createHttpClient())
 
     val accountRepository: AccountRepository by lazy {
         AccountRepository(dbManager = dbManager, appSettings = appSettings)

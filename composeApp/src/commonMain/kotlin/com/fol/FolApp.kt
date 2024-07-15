@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -32,7 +33,8 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Preview
 fun FolApp(
     navController: NavHostController = rememberNavController(),
-    appSettings: AppSettings = DiGraph.appSettings
+    appSettings: AppSettings = DiGraph.appSettings,
+    viewModel : AppViewModel = viewModel{ AppViewModel() }
 ) {
 
     val themeState by appSettings.themeState.collectAsState()
