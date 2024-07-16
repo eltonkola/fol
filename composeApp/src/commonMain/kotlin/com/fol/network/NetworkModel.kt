@@ -1,16 +1,5 @@
 package com.fol.com.fol.network
 
-import kotlinx.coroutines.flow.StateFlow
-
-//interface RTNManager {
-//    fun startListening()
-//    fun stopListening()
-//
-//    val connected : StateFlow<Boolean>
-//    val messages : StateFlow<RtnEvent<*>?>
-//}
-//
-//
 //enum class EventType(val value: String) {
 //    @Json(name = "likes") LIKE("likes"),
 //    @Json(name = "likesPlus") SUPER_LIKE("likesPlus"),

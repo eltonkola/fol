@@ -226,10 +226,4 @@ enum class RespType(val value: String){
     NewMessage("new_message"),
     Messages("messages"),
     ConfirmationDelivered("confirmation_delivered");
-
-    companion object {
-        fun fromValue(value: String): RespType {
-            return entries.first{ it.value == value }
-        }
-    }
 }

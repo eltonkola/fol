@@ -11,6 +11,7 @@ import io.ktor.websocket.close
 import io.ktor.websocket.readBytes
 import io.ktor.websocket.readText
 import io.ktor.websocket.send
+import kotlinx.coroutines.flow.MutableStateFlow
 
 class NetworkManager(private val client: HttpClient) {
 
@@ -20,6 +21,9 @@ class NetworkManager(private val client: HttpClient) {
     }
 
     private var session: DefaultClientWebSocketSession? = null
+
+    val connected = MutableStateFlow(false)
+    val messages = MutableStateFlow<ServerEvent<*>?>(null)
 
     suspend fun connect() {
         Logger.i(">> WS CONNECT")
@@ -50,6 +54,14 @@ class NetworkManager(private val client: HttpClient) {
 
     suspend fun sendMessage(message: String) {
         session?.send(message) ?: Logger.w(">> WS session is not connected")
+    }
+
+    suspend fun connect(publicKey: String) {
+        send("{ \"type\": \"connect\", \"data\" : { \"senderKey\" : \"$publicKey\" } }")
+    }
+
+    private suspend fun send(toSend: String){
+        session?.send(toSend) ?: Logger.w(">> WS session is not connected")
     }
 
     suspend fun disconnect() {
