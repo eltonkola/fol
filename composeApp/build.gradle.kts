@@ -91,7 +91,8 @@ kotlin {
             implementation(libs.ktor.client.core)
             implementation(libs.io.ktor.ktor.client.websockets7)
             implementation(libs.kotlinx.coroutines.core)
-
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
         }
 
         desktopMain.dependencies {

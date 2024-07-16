@@ -2,8 +2,10 @@ package com.fol.com.fol.network
 
 import co.touchlab.kermit.Logger
 import io.ktor.client.HttpClient
+import io.ktor.client.call.body
 import io.ktor.client.plugins.websocket.DefaultClientWebSocketSession
 import io.ktor.client.plugins.websocket.webSocket
+import io.ktor.client.request.get
 import io.ktor.http.HttpMethod
 import io.ktor.websocket.CloseReason
 import io.ktor.websocket.Frame
@@ -11,19 +13,21 @@ import io.ktor.websocket.close
 import io.ktor.websocket.readBytes
 import io.ktor.websocket.readText
 import io.ktor.websocket.send
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.serialization.Serializable
 
-class NetworkManager(private val client: HttpClient) {
+class NetworkManager(
+    private val client: HttpClient
+    ) {
 
     companion object {
         const val SERVER_URL = "192.168.0.2"
-        const val PORT = 8282
+        const val PORT = 8182
     }
 
     private var session: DefaultClientWebSocketSession? = null
 
-    val connected = MutableStateFlow(false)
-    val messages = MutableStateFlow<ServerEvent<*>?>(null)
+//    val connected = MutableStateFlow(false)
+//    val messages = MutableStateFlow<ServerEvent<*>?>(null)
 
     suspend fun connect() {
         Logger.i(">> WS CONNECT")
@@ -70,4 +74,12 @@ class NetworkManager(private val client: HttpClient) {
         client.close()
     }
 
+    suspend fun serverStatus() {
+        val appStatusResponse: AppStatusResponse = client.get("http://$SERVER_URL:$PORT/serverStatus").body()
+        Logger.i("appStatusResponse: $appStatusResponse")
+    }
+
 }
+
+@Serializable
+data class AppStatusResponse(val message: String, val publicKey: String, val serverVersion: String)

@@ -97,4 +97,8 @@ object CryptoManager {
         return rsaEncryption.validatePrivateKey(privateKey)
     }
 
+    suspend fun signChallenge(challenge: String, privateKeyBase64: String): String {
+        return rsaEncryption.signChallenge(challenge, privateKeyBase64)
+    }
+
 }

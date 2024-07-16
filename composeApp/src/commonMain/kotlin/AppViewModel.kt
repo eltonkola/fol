@@ -12,13 +12,13 @@ class AppViewModel(
 
     init{
         viewModelScope.launch {
-            networkManager.connect()
+            //networkManager.connect()
         }
     }
 
     override fun onCleared() {
         viewModelScope.launch {
-            networkManager.disconnect()
+          //  networkManager.disconnect()
         }
         super.onCleared()
     }

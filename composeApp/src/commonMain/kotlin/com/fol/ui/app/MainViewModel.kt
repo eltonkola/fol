@@ -6,6 +6,7 @@ import com.fol.com.fol.db.model.AppProfile
 import com.fol.com.fol.model.DiGraph
 import com.fol.com.fol.model.ThreadPreview
 import com.fol.com.fol.model.repo.MessagesRepository
+import com.fol.com.fol.network.NetworkManager
 import com.fol.model.repo.AccountRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,7 +23,8 @@ data class MainUiState(
 
 class MainViewModel(
     private val accountRepository: AccountRepository = DiGraph.accountRepository,
-    private val messagesRepository: MessagesRepository = DiGraph.messagesRepository
+    private val messagesRepository: MessagesRepository = DiGraph.messagesRepository,
+    private val networkManager: NetworkManager = DiGraph.networkManager
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(MainUiState(accountRepository.currentUser))
     val uiState: StateFlow<MainUiState> = _uiState.asStateFlow()
@@ -35,6 +37,11 @@ class MainViewModel(
                 }
             }.stateIn(viewModelScope)
         }
+
+        viewModelScope.launch {
+            networkManager.serverStatus()
+        }
+
     }
 
 }

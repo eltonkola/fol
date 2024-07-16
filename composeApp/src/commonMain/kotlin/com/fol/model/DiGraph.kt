@@ -3,11 +3,14 @@ package com.fol.com.fol.model
 import com.fol.com.fol.db.AppSettings
 import com.fol.com.fol.db.DbManager
 import com.fol.com.fol.model.repo.ContactsRepository
-import com.fol.model.repo.AccountRepository
 import com.fol.com.fol.model.repo.MessagesRepository
+import com.fol.com.fol.network.BearerTokenLoader
 import com.fol.com.fol.network.NetworkManager
+import com.fol.model.repo.AccountRepository
 import com.fol.network.createHttpClient
+import com.fol.network.createSecureHttpClient
 import com.russhwolf.settings.Settings
+import io.realm.kotlin.internal.platform.runBlocking
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
@@ -23,7 +26,14 @@ object DiGraph {
     }
     val appSettings = AppSettings(settings)
 
-    val networkManager : NetworkManager = NetworkManager(createHttpClient())
+
+    val networkManager : NetworkManager by lazy {
+        NetworkManager(createSecureHttpClient{
+            runBlocking {
+                BearerTokenLoader.provideToken(createHttpClient(), accountRepository)
+            }
+        })
+    }
 
     val accountRepository: AccountRepository by lazy {
         AccountRepository(dbManager = dbManager, appSettings = appSettings)

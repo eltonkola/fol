@@ -126,4 +126,20 @@ actual class RSAEncryption actual constructor() {
             false // If any exception occurs, the key is not valid
         }
     }
+
+    actual suspend fun signChallenge(challenge: String, privateKeyBase64: String): String {
+        val privateKey = decodePrivateKey(privateKeyBase64)
+        val signature = Signature.getInstance("SHA256withRSA")
+        signature.initSign(privateKey)
+        signature.update(challenge.toByteArray())
+        return Base64.getEncoder().encodeToString(signature.sign())
+    }
+
+    private fun decodePrivateKey(privateKeyBase64: String): PrivateKey {
+        val keyBytes = Base64.getDecoder().decode(privateKeyBase64)
+        val keySpec = PKCS8EncodedKeySpec(keyBytes)
+        val keyFactory = KeyFactory.getInstance("RSA")
+        return keyFactory.generatePrivate(keySpec)
+    }
+
 }
