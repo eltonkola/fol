@@ -35,6 +35,10 @@ class MainViewModel(
 
     init{
         viewModelScope.launch {
+            networkManager.connect()
+        }
+
+        viewModelScope.launch {
             messagesRepository.threadPreviews.map { data ->
                 _uiState.update {
                     it.copy(threads = data)
@@ -42,19 +46,15 @@ class MainViewModel(
             }.stateIn(viewModelScope)
         }
 
+
+
+    }
+
+    override fun onCleared() {
         viewModelScope.launch {
-            networkManager.serverStatus()
-            delay(3_000)
-            networkManager.sendMessages(listOf(SendMessageRequest(accountRepository.currentUser.publicKey, "1", "hi", 0)))
-            delay(3_000)
-            networkManager.getMessages()
-            delay(3_000)
-            networkManager.received(MessageReceivedRequest(listOf(1)))
-            delay(3_000)
-            networkManager.check(DeliveryCheckRequest(listOf(2)))
-
+            networkManager.disconnect()
         }
-
+        super.onCleared()
     }
 
 }

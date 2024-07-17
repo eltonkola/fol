@@ -20,7 +20,8 @@ object DiGraph {
     private var coroutineScope = CoroutineScope(appDispatcher)
 
     private val settings: Settings = Settings()
-    val dbManager: DbManager = DbManager()
+    private val dbManager: DbManager = DbManager()
+
     val contactsRepository: ContactsRepository by lazy {
         ContactsRepository(coroutineScope = coroutineScope, dbManager = dbManager)
     }
@@ -32,14 +33,20 @@ object DiGraph {
             runBlocking {
                 BearerTokenLoader.provideToken(createHttpClient(), accountRepository)
             }
-        })
+        }, messagesRepository)
     }
 
     val accountRepository: AccountRepository by lazy {
         AccountRepository(dbManager = dbManager, appSettings = appSettings)
     }
     val messagesRepository: MessagesRepository by lazy {
-        MessagesRepository(contactsRepository = contactsRepository, coroutineScope = coroutineScope, dbManager = dbManager)
+        MessagesRepository(
+            contactsRepository = contactsRepository,
+            coroutineScope = coroutineScope,
+            dbManager = dbManager,
+            networkManager = networkManager,
+            accountRepository = accountRepository
+        )
     }
 
 }

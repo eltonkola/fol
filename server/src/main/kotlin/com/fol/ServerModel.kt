@@ -22,7 +22,7 @@ data class SendMessageRequest(val senderKey: String, val receiverKey: String, va
 data class SendMessageResponse(val remoteId: List<Int>)
 
 @Serializable
-data class GetMessageResponse(val remoteId: List<ServerMessage>)
+data class GetMessageResponse(val messages: List<ServerMessage>)
 
 @Serializable
 data class ServerMessage(val senderKey: String, val receiverKey: String, val message: String, val timestamp: Long, val remoteId: Int)

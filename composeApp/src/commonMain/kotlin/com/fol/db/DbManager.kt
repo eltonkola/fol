@@ -156,4 +156,28 @@ class DbManager {
             .map { it.list }
     }
 
+    //all messages we sent, but don't know if they are delivered to the other user
+    fun getAllSentMessages(): List<AppMessage> {
+        return realm.query<AppMessage>("sent == $0 AND received == $1 AND serverID > $2", true, false, 0).find()
+    }
+
+    fun messageConfirmedAsDelivered(publicID: Int) {
+        Logger.i { "getMessageByPublicId - publicID: $publicID" }
+        realm.writeBlocking {
+            val message = realm.query<AppMessage>("serverID == $0", publicID).first().find()
+            message?.let {
+                it.received = true
+                it.sent = true
+            }
+        }
+    }
+
+    fun unsentMessages(senderKey: String): Flow<List<AppMessage>> {
+        Logger.i { "unsentMessages - realm: $realm" }
+        return realm.query<AppMessage>(
+            "sent == $0 AND senderKey == $1",
+            false, senderKey
+        ).asFlow().map { it.list }
+    }
+
 }

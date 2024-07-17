@@ -16,6 +16,7 @@ class AppMessage : RealmObject , Author {
     var sent: Boolean = false
     var received: Boolean = false
     var timeSent: RealmInstant = RealmInstant.now()
+    var serverID : Int = 0
     private var typeString: String = MessageType.TEXT.state
 
     var type: MessageType

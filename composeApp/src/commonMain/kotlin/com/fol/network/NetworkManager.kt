@@ -92,33 +92,37 @@ class NetworkManager(
         Logger.i("appStatusResponse: $appStatusResponse")
     }
 
-    suspend fun sendMessages(messages: List<SendMessageRequest>) {
+    suspend fun sendMessages(messages: List<SendMessageRequest>) : SendMessageResponse {
         val sendMessageResponse: SendMessageResponse = client.post("http://$SERVER_URL:$PORT/send"){
             contentType(io.ktor.http.ContentType.Application.Json)
             setBody(messages)
         }.body()
         Logger.i("sendMessages sendMessageResponse: $sendMessageResponse")
+        return sendMessageResponse
     }
 
-    suspend fun getMessages() {
+    suspend fun getMessages()  : GetMessageResponse{
         val getMessageResponse: GetMessageResponse = client.get("http://$SERVER_URL:$PORT/messages").body()
         Logger.i("getMessages getMessageResponse: $getMessageResponse")
+        return getMessageResponse
     }
 
-    suspend fun received(messages: MessageReceivedRequest) {
+    suspend fun received(messages: MessageReceivedRequest) : MessageReceivedResponse {
         val messageReceivedResponse: MessageReceivedResponse = client.post("http://$SERVER_URL:$PORT/received"){
             contentType(io.ktor.http.ContentType.Application.Json)
             setBody(messages)
         }.body()
         Logger.i("received messageReceivedResponse: $messageReceivedResponse")
+        return messageReceivedResponse
     }
 
-    suspend fun check(messages: DeliveryCheckRequest) {
+    suspend fun check(messages: DeliveryCheckRequest) : DeliveryCheckResponse {
         val deliveryCheckResponse: DeliveryCheckResponse = client.post("http://$SERVER_URL:$PORT/check"){
             contentType(io.ktor.http.ContentType.Application.Json)
             setBody(messages)
         }.body()
         Logger.i("check deliveryCheckResponse: $deliveryCheckResponse")
+        return deliveryCheckResponse
     }
 
 }

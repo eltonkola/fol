@@ -1,5 +1,7 @@
 package com.fol.com.fol.network
 
+import com.fol.com.fol.db.model.AppMessage
+import com.fol.com.fol.db.model.toInstant
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -21,7 +23,7 @@ data class SendMessageRequest(val senderKey: String, val receiverKey: String, va
 data class SendMessageResponse(val remoteId: List<Int>)
 
 @Serializable
-data class GetMessageResponse(val remoteId: List<ServerMessage>)
+data class GetMessageResponse(val messages: List<ServerMessage>)
 
 @Serializable
 data class ServerMessage(val senderKey: String, val receiverKey: String, val message: String, val timestamp: Long, val remoteId: Int)
@@ -57,5 +59,14 @@ fun WsData.toWsMessage() : WsMessage {
             timestamp = this.data["timestamp"]?.toLong() ?: 0,
             remoteId = this.data["remoteId"]?.toInt() ?: 0
         )
+    )
+}
+
+fun AppMessage.toServerMessage(): SendMessageRequest {
+    return SendMessageRequest(
+        senderKey = this.senderKey,
+        receiverKey = this.receiverKey,
+        message = this.message,
+        timestamp = this.timeSent.toInstant().epochSeconds
     )
 }
