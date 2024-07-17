@@ -55,7 +55,7 @@ fun Application.configureWebSocket() {
                             is Frame.Text -> {
                                 val text = frame.readText()
                                 val request = Json.decodeFromString<WsRequest>(text)
-                                
+
                                 when (request.type) {
                                     "connect" -> { //handshake, cache this session
                                         user = request.data["senderKey"]!!

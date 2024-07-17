@@ -15,8 +15,8 @@ import io.ktor.server.response.respond
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.routing
-import io.ktor.server.websocket.WebSockets
 import io.ktor.websocket.Frame
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.sql.deleteWhere
@@ -25,10 +25,6 @@ import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
 fun Application.configureRest() {
-    install(WebSockets) {
-        maxFrameSize = Long.MAX_VALUE
-        masking = false
-    }
 
     routing {
         authenticate("auth-jwt") {
@@ -57,7 +53,7 @@ fun Application.configureRest() {
                                 request.timestamp,
                                 messageId.value
                             )
-                            it.outgoing.send(Frame.Text(Json.encodeToString(messageRealTime)))
+                            it.outgoing.send(Frame.Text(Json.encodeToString(WsMessage(messageRealTime))))
                         }
                         messageId.value
                     } catch (e: Exception) {
@@ -106,14 +102,10 @@ fun Application.configureRest() {
                     val receiverKey = message.first
                     val id = message.second
                     sessions[receiverKey]?.let {
-                        val deliveredMessage = MessageDeliveredConfirmation(listOf(id))
                         it.outgoing.send(
                             Frame.Text(
                                 Json.encodeToString(
-                                    WebSocketResponseMessageDeliveredConfirmation(
-                                        RespType.ConfirmationDelivered.value,
-                                        deliveredMessage
-                                    )
+                                    WsDelivery(listOf(id))
                                 )
                             )
                         )
@@ -137,41 +129,32 @@ fun Application.configureRest() {
     }
 }
 
+@Serializable
+data class DeliveryCheckRequest(val messageIds: List<Int>)
 
-data class DeliveryCheckRequest(
-    val messageIds: List<Int>
-)
-data class DeliveryCheckResponse(
-    val deliveredId: List<Int>
-)
+@Serializable
+data class DeliveryCheckResponse(val deliveredId: List<Int>)
 
-data class MessageReceivedRequest(
-    val messageIds: List<Int>
-)
+@Serializable
+data class MessageReceivedRequest(val messageIds: List<Int>)
 
-data class SendMessageRequest(
-    val senderKey: String,
-    val receiverKey: String,
-    val message: String,
-    val timestamp: Long
-)
+@Serializable
+data class MessageReceivedResponse(val success: Boolean)
 
-data class MessageReceivedResponse(
-    val success: Boolean
-)
+@Serializable
+data class SendMessageRequest(val senderKey: String, val receiverKey: String, val message: String, val timestamp: Long)
 
-data class SendMessageResponse(
-    val remoteId: List<Int>
-)
+@Serializable
+data class SendMessageResponse(val remoteId: List<Int>)
 
-data class GetMessageResponse(
-    val remoteId: List<AppMessage>
-)
+@Serializable
+data class GetMessageResponse(val remoteId: List<AppMessage>)
 
-data class AppMessage(
-    val senderKey: String,
-    val receiverKey: String,
-    val message: String,
-    val timestamp: Long,
-    val remoteId: Int
-)
+@Serializable
+data class AppMessage(val senderKey: String, val receiverKey: String, val message: String, val timestamp: Long, val remoteId: Int)
+
+@Serializable
+data class WsMessage(val message: AppMessage)
+
+@Serializable
+data class WsDelivery(val deliveredId: List<Int>)

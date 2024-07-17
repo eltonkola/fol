@@ -17,7 +17,12 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.routing
 import kotlinx.serialization.Serializable
+import java.security.KeyFactory
+import java.security.Signature
+import java.security.spec.X509EncodedKeySpec
+import java.util.Base64
 import java.util.Date
+import java.util.Random
 import java.util.concurrent.ConcurrentHashMap
 
 val challenges = ConcurrentHashMap<String, String>()
@@ -90,3 +95,28 @@ fun Application.configureSecurityRouting() {
 
 @Serializable
 data class AppStatusResponse(val message: String, val publicKey: String, val serverVersion: String)
+
+fun generateChallenge(length: Int = 32): String {
+    val bytes = ByteArray(length)
+    Random().nextBytes(bytes)
+    return Base64.getEncoder().encodeToString(bytes)
+}
+
+fun verifySignature(publicKeyString: String, challenge: String, signatureString: String): Boolean {
+    try {
+        val keyBytes = Base64.getDecoder().decode(publicKeyString)
+        val keySpec = X509EncodedKeySpec(keyBytes)
+        val keyFactory = KeyFactory.getInstance("RSA")
+        val publicKey = keyFactory.generatePublic(keySpec)
+
+        val signature = Signature.getInstance("SHA256withRSA")
+        signature.initVerify(publicKey)
+        signature.update(challenge.toByteArray())
+
+        val signatureBytes = Base64.getDecoder().decode(signatureString)
+        return signature.verify(signatureBytes)
+    } catch (e: Exception) {
+        e.printStackTrace()
+        return false
+    }
+}

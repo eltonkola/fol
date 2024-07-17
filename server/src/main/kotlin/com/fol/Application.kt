@@ -19,6 +19,4 @@ fun Application.module() {
         configureWebSocket()
         configureRest()
         configureDatabase()
-        legacyWs()
-
 }
