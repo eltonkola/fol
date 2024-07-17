@@ -6,6 +6,7 @@ import io.ktor.server.auth.authenticate
 import io.ktor.server.auth.jwt.JWTPrincipal
 import io.ktor.server.auth.principal
 import io.ktor.server.routing.routing
+import io.ktor.server.websocket.DefaultWebSocketServerSession
 import io.ktor.server.websocket.WebSockets
 import io.ktor.server.websocket.webSocket
 import io.ktor.websocket.CloseReason
@@ -15,7 +16,12 @@ import io.ktor.websocket.readText
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 import java.time.Instant
+import java.util.concurrent.ConcurrentHashMap
+
+val sessions = ConcurrentHashMap<String, DefaultWebSocketServerSession>()
 
 fun Application.configureWebSocket() {
     install(WebSockets) {
@@ -29,6 +35,8 @@ fun Application.configureWebSocket() {
                 val principal = call.principal<JWTPrincipal>()
                 val publicKey = principal!!.payload.getClaim("publicKey").asString()
 
+                println("Connected value from principal: $publicKey")
+
                 launch {
                     while (isActive) {
                         delay(60000) // Check every minute
@@ -40,21 +48,31 @@ fun Application.configureWebSocket() {
                     }
                 }
 
+                var user: String? = null
                 try {
                     for (frame in incoming) {
                         when (frame) {
                             is Frame.Text -> {
                                 val text = frame.readText()
-                                // Handle incoming messages
-
+                                val request = Json.decodeFromString<WsRequest>(text)
+                                
+                                when (request.type) {
+                                    "connect" -> { //handshake, cache this session
+                                        user = request.data["senderKey"]!!
+                                        sessions[user] = this
+                                    }
+                                    else -> {
+                                        println("Unexpected frame received: $text")
+                                    }
+                                }
                             }
                             else -> {
-
+                                println("Unexpected frame received: ${frame::class}")
                             }
                         }
                     }
                 } finally {
-                    // Connection closed
+                    user?.let { sessions.remove(it) }
                 }
             }
         }
@@ -65,3 +83,6 @@ fun isTokenExpired(principal: JWTPrincipal): Boolean {
     val expiration = principal.expiresAt?.toInstant() ?: return true
     return Instant.now().isAfter(expiration)
 }
+
+@Serializable
+data class WsRequest(val type: String, val data: Map<String, String>)

@@ -17,6 +17,7 @@ fun Application.module() {
 
         configureSecurityRouting()
         configureWebSocket()
+        configureRest()
         configureDatabase()
         legacyWs()
 
