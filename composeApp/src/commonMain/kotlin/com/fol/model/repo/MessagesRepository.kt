@@ -14,6 +14,7 @@ import com.fol.com.fol.network.GetMessageResponse
 import com.fol.com.fol.network.MessageReceivedRequest
 import com.fol.com.fol.network.MessageReceivedResponse
 import com.fol.com.fol.network.NetworkManager
+import com.fol.com.fol.network.NetworkOperations
 import com.fol.com.fol.network.SendMessageRequest
 import com.fol.com.fol.network.SendMessageResponse
 import com.fol.com.fol.network.ServerMessage
@@ -32,38 +33,16 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 
-interface NetworkOperations{
-    fun getMessages(): GetMessageResponse
-    fun received(messages: MessageReceivedRequest) : MessageReceivedResponse
-    fun check(messages: DeliveryCheckRequest) : DeliveryCheckResponse
-    fun sendMessages(messages: List<SendMessageRequest>) : SendMessageResponse
+interface MessageEventReceiver{
+    fun addMessageFromServer(message: ServerMessage)
+    fun gotDeliveryFromServer(deliveredId: List<Int>)
 }
-
-class FakeNetwrok : NetworkOperations{
-    override fun getMessages(): GetMessageResponse {
-        return GetMessageResponse(messages = emptyList())
-    }
-
-    override fun received(messages: MessageReceivedRequest): MessageReceivedResponse {
-        return MessageReceivedResponse(true)
-    }
-
-    override fun check(messages: DeliveryCheckRequest): DeliveryCheckResponse {
-        return DeliveryCheckResponse(emptyList())
-    }
-
-    override fun sendMessages(messages: List<SendMessageRequest>): SendMessageResponse {
-        return SendMessageResponse(emptyList())
-    }
-
-}
-
 
 class MessagesRepository(
     private val coroutineScope: CoroutineScope,
     private val contactsRepository : ContactsRepository,
     private val dbManager: DbManager,
-    private val networkManager: NetworkManager,
+    private val networkManager: NetworkOperations,
     private val accountRepository: AccountRepository
 ) {
 

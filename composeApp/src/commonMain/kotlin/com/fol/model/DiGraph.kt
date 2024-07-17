@@ -3,9 +3,13 @@ package com.fol.com.fol.model
 import com.fol.com.fol.db.AppSettings
 import com.fol.com.fol.db.DbManager
 import com.fol.com.fol.model.repo.ContactsRepository
+import com.fol.com.fol.model.repo.MessageEventReceiver
 import com.fol.com.fol.model.repo.MessagesRepository
 import com.fol.com.fol.network.BearerTokenLoader
+import com.fol.com.fol.network.FakeNetwrok
 import com.fol.com.fol.network.NetworkManager
+import com.fol.com.fol.network.NetworkOperations
+import com.fol.com.fol.network.ServerMessage
 import com.fol.model.repo.AccountRepository
 import com.fol.network.createHttpClient
 import com.fol.network.createSecureHttpClient
@@ -28,12 +32,20 @@ object DiGraph {
     val appSettings = AppSettings(settings)
 
 
-    val networkManager : NetworkManager by lazy {
+    val networkManager : NetworkOperations by lazy {
         NetworkManager(createSecureHttpClient{
             runBlocking {
                 BearerTokenLoader.provideToken(createHttpClient(), accountRepository)
             }
-        }, messagesRepository)
+        }, messageEventReceiver = object : MessageEventReceiver {
+            override fun addMessageFromServer(message: ServerMessage) {
+                messagesRepository.addMessageFromServer(message)
+            }
+
+            override fun gotDeliveryFromServer(deliveredId: List<Int>) {
+                messagesRepository.gotDeliveryFromServer(deliveredId)
+            }
+        })
     }
 
     val accountRepository: AccountRepository by lazy {

@@ -1,6 +1,7 @@
 package com.fol.com.fol.network
 
 import co.touchlab.kermit.Logger
+import com.fol.com.fol.model.repo.MessageEventReceiver
 import com.fol.com.fol.model.repo.MessagesRepository
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -20,10 +21,48 @@ import io.ktor.websocket.send
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
+interface NetworkOperations {
+    suspend fun getMessages(): GetMessageResponse
+    suspend fun received(messages: MessageReceivedRequest) : MessageReceivedResponse
+    suspend fun check(messages: DeliveryCheckRequest) : DeliveryCheckResponse
+    suspend fun sendMessages(messages: List<SendMessageRequest>) : SendMessageResponse
+    suspend fun connect()
+    suspend fun disconnect()
+}
+
+class FakeNetwrok : NetworkOperations{
+    override suspend fun getMessages(): GetMessageResponse {
+        return GetMessageResponse(messages = emptyList())
+    }
+
+    override suspend fun received(messages: MessageReceivedRequest): MessageReceivedResponse {
+        return MessageReceivedResponse(true)
+    }
+
+    override suspend fun check(messages: DeliveryCheckRequest): DeliveryCheckResponse {
+        return DeliveryCheckResponse(emptyList())
+    }
+
+    override suspend fun sendMessages(messages: List<SendMessageRequest>): SendMessageResponse {
+        return SendMessageResponse(emptyList())
+    }
+
+    override suspend fun connect() {
+
+    }
+
+    override suspend fun disconnect() {
+
+    }
+
+}
+
+
+
 class NetworkManager(
     private val client: HttpClient,
-    private val messagesRepository: MessagesRepository
-    ) {
+    private val messageEventReceiver: MessageEventReceiver
+    ) : NetworkOperations {
 
     companion object {
         const val SERVER_URL = "192.168.0.2"
@@ -35,10 +74,10 @@ class NetworkManager(
 //    val connected = MutableStateFlow(false)
 //    val messages = MutableStateFlow<ServerEvent<*>?>(null)
 
-    suspend fun connect() {
+    override suspend fun connect() {
 
         Logger.i(">> WS CONNECT")
-        client.webSocket(method = HttpMethod.Get, port = PORT, host = SERVER_URL, path = "/ws") {
+        client.webSocket(method = HttpMethod.Get, port = PORT, host = SERVER_URL, path = "/fol") {
 
             session = this // Store the session
 
@@ -58,12 +97,12 @@ class NetworkManager(
                             when (data.type) {
                                 "message" -> {
                                     val message = data.toWsMessage()
-                                    messagesRepository.addMessageFromServer(message.message)
+                                    messageEventReceiver.addMessageFromServer(message.message)
                                     println("Received WsMessage: ${message.message}")
                                 }
                                 "delivery" -> {
                                     val delivery = data.toWsDelivery()
-                                    messagesRepository.gotDeliveryFromServer(delivery.deliveredId)
+                                    messageEventReceiver.gotDeliveryFromServer(delivery.deliveredId)
                                     println("Received WsDelivery: ${delivery.deliveredId}")
                                 }
                             }
@@ -81,7 +120,7 @@ class NetworkManager(
 
     }
 
-    suspend fun disconnect() {
+    override suspend fun disconnect() {
         Logger.i(">> WS DISCONNECT")
         session?.close(CloseReason(CloseReason.Codes.NORMAL, ""))
         client.close()
@@ -92,7 +131,7 @@ class NetworkManager(
         Logger.i("appStatusResponse: $appStatusResponse")
     }
 
-    suspend fun sendMessages(messages: List<SendMessageRequest>) : SendMessageResponse {
+    override suspend fun sendMessages(messages: List<SendMessageRequest>) : SendMessageResponse {
         val sendMessageResponse: SendMessageResponse = client.post("http://$SERVER_URL:$PORT/send"){
             contentType(io.ktor.http.ContentType.Application.Json)
             setBody(messages)
@@ -101,13 +140,13 @@ class NetworkManager(
         return sendMessageResponse
     }
 
-    suspend fun getMessages()  : GetMessageResponse{
+    override suspend fun getMessages()  : GetMessageResponse{
         val getMessageResponse: GetMessageResponse = client.get("http://$SERVER_URL:$PORT/messages").body()
         Logger.i("getMessages getMessageResponse: $getMessageResponse")
         return getMessageResponse
     }
 
-    suspend fun received(messages: MessageReceivedRequest) : MessageReceivedResponse {
+    override suspend fun received(messages: MessageReceivedRequest) : MessageReceivedResponse {
         val messageReceivedResponse: MessageReceivedResponse = client.post("http://$SERVER_URL:$PORT/received"){
             contentType(io.ktor.http.ContentType.Application.Json)
             setBody(messages)
@@ -116,7 +155,7 @@ class NetworkManager(
         return messageReceivedResponse
     }
 
-    suspend fun check(messages: DeliveryCheckRequest) : DeliveryCheckResponse {
+    override suspend fun check(messages: DeliveryCheckRequest) : DeliveryCheckResponse {
         val deliveryCheckResponse: DeliveryCheckResponse = client.post("http://$SERVER_URL:$PORT/check"){
             contentType(io.ktor.http.ContentType.Application.Json)
             setBody(messages)

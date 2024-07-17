@@ -9,6 +9,7 @@ import com.fol.com.fol.model.repo.MessagesRepository
 import com.fol.com.fol.network.DeliveryCheckRequest
 import com.fol.com.fol.network.MessageReceivedRequest
 import com.fol.com.fol.network.NetworkManager
+import com.fol.com.fol.network.NetworkOperations
 import com.fol.com.fol.network.SendMessageRequest
 import com.fol.model.repo.AccountRepository
 import kotlinx.coroutines.delay
@@ -28,7 +29,7 @@ data class MainUiState(
 class MainViewModel(
     private val accountRepository: AccountRepository = DiGraph.accountRepository,
     private val messagesRepository: MessagesRepository = DiGraph.messagesRepository,
-    private val networkManager: NetworkManager = DiGraph.networkManager
+    private val networkManager: NetworkOperations = DiGraph.networkManager
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(MainUiState(accountRepository.currentUser))
     val uiState: StateFlow<MainUiState> = _uiState.asStateFlow()
