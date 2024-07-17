@@ -1,6 +1,7 @@
-package com.fol.com.fol.network
+package com.fol
 
 import kotlinx.serialization.Serializable
+
 
 @Serializable
 data class DeliveryCheckRequest(val messageIds: List<Int>)
@@ -32,7 +33,6 @@ data class ServerStatusResponse(val message: String, val publicKey: String, val 
 @Serializable
 data class WsRequest(val type: String)
 
-
 @Serializable
 data class WsMessage(val message: ServerMessage)
 
@@ -42,9 +42,33 @@ data class WsDelivery(val deliveredId: List<Int>)
 @Serializable
 data class WsData(val type: String, val data: Map<String, String>)
 
+
+
 fun WsData.toWsDelivery() : WsDelivery {
     return WsDelivery(
         deliveredId = this.data["ids"]?.split(",")?.map { it.toInt() } ?: emptyList()
+    )
+}
+
+fun WsDelivery.toWsData() : WsData {
+    return WsData(
+        type = "delivery",
+        data = mapOf(
+            "ids" to this.deliveredId.joinToString(",")
+        )
+    )
+}
+
+fun WsMessage.toWsMessage() : WsData {
+    return WsData(
+        type = "message",
+        data = mapOf(
+            "senderKey" to this.message.senderKey,
+            "receiverKey" to this.message.receiverKey,
+            "message" to this.message.message,
+            "timestamp" to this.message.timestamp.toString(),
+            "remoteId" to this.message.remoteId.toString()
+        )
     )
 }
 
@@ -59,3 +83,5 @@ fun WsData.toWsMessage() : WsMessage {
         )
     )
 }
+
+

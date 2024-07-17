@@ -15,11 +15,15 @@ actual fun createSecureHttpClient(tokenProvider: () -> String): HttpClient {
         install(ContentNegotiation) {
             json(Json { ignoreUnknownKeys = true })
         }
-
+//        install(JsonFeature) {
+//            serializer = KotlinxSerializer(Json { ignoreUnknownKeys = true })
+//        }
         install(BearerAuth) {
             this.tokenProvider = tokenProvider
         }
-
+//        install(Logging) {
+//            level = LogLevel.BODY
+//        }
     }
 }
 

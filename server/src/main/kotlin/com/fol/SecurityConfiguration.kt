@@ -33,6 +33,9 @@ data class AuthRequest(val publicKey: String)
 @Serializable
 data class VerifyRequest(val publicKey: String, val signature: String)
 
+@Serializable
+data class AppStatusResponse(val message: String, val publicKey: String, val serverVersion: String)
+
 fun generateToken(publicKey: String, algorithm: Algorithm): String {
     return JWT.create()
         .withClaim("publicKey", publicKey)
@@ -93,8 +96,6 @@ fun Application.configureSecurityRouting() {
     }
 }
 
-@Serializable
-data class AppStatusResponse(val message: String, val publicKey: String, val serverVersion: String)
 
 fun generateChallenge(length: Int = 32): String {
     val bytes = ByteArray(length)

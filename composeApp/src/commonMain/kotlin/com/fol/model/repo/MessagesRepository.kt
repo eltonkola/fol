@@ -7,13 +7,13 @@ import com.fol.com.fol.db.model.AppMessage
 import com.fol.com.fol.db.model.AppProfile
 import com.fol.com.fol.model.Message
 import com.fol.com.fol.model.ThreadPreview
+import com.fol.com.fol.network.ServerMessage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.datetime.Clock
@@ -54,6 +54,14 @@ class MessagesRepository(
     fun addMessage(message: AppMessage) {
         Logger.i{ "sendMessage message: $message" }
         dbManager.addMessage(message)
+    }
+
+    fun addMessageFromServer(message: ServerMessage) {
+
+    }
+
+    fun gotDeliveryFromServer(deliveredId: List<Int>) {
+
     }
 
 }

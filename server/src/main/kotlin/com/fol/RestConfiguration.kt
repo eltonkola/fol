@@ -6,7 +6,6 @@ import com.fol.Messages.senderKey
 import com.fol.Messages.timestamp
 import io.ktor.server.application.Application
 import io.ktor.server.application.call
-import io.ktor.server.application.install
 import io.ktor.server.auth.authenticate
 import io.ktor.server.auth.jwt.JWTPrincipal
 import io.ktor.server.auth.principal
@@ -16,7 +15,6 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.routing
 import io.ktor.websocket.Frame
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.sql.deleteWhere
@@ -46,14 +44,16 @@ fun Application.configureRest() {
 
                         //send a web socket live message if the target user is connected
                         sessions[request.receiverKey]?.let {
-                            val messageRealTime = AppMessage(
+                            val messageRealTime = ServerMessage(
                                 request.senderKey,
                                 request.receiverKey,
                                 request.message,
                                 request.timestamp,
                                 messageId.value
                             )
-                            it.outgoing.send(Frame.Text(Json.encodeToString(WsMessage(messageRealTime))))
+                            it.outgoing.send(Frame.Text(Json.encodeToString(
+                                WsMessage(messageRealTime).toWsMessage()
+                            )))
                         }
                         messageId.value
                     } catch (e: Exception) {
@@ -72,7 +72,7 @@ fun Application.configureRest() {
 
                 val messages = transaction {
                     Messages.select { receiverKey eq publicKey }.map {
-                        AppMessage(
+                        ServerMessage(
                             it[senderKey],
                             it[receiverKey],
                             it[message],
@@ -105,7 +105,7 @@ fun Application.configureRest() {
                         it.outgoing.send(
                             Frame.Text(
                                 Json.encodeToString(
-                                    WsDelivery(listOf(id))
+                                    WsDelivery(listOf(id)).toWsData()
                                 )
                             )
                         )
@@ -128,33 +128,3 @@ fun Application.configureRest() {
         }
     }
 }
-
-@Serializable
-data class DeliveryCheckRequest(val messageIds: List<Int>)
-
-@Serializable
-data class DeliveryCheckResponse(val deliveredId: List<Int>)
-
-@Serializable
-data class MessageReceivedRequest(val messageIds: List<Int>)
-
-@Serializable
-data class MessageReceivedResponse(val success: Boolean)
-
-@Serializable
-data class SendMessageRequest(val senderKey: String, val receiverKey: String, val message: String, val timestamp: Long)
-
-@Serializable
-data class SendMessageResponse(val remoteId: List<Int>)
-
-@Serializable
-data class GetMessageResponse(val remoteId: List<AppMessage>)
-
-@Serializable
-data class AppMessage(val senderKey: String, val receiverKey: String, val message: String, val timestamp: Long, val remoteId: Int)
-
-@Serializable
-data class WsMessage(val message: AppMessage)
-
-@Serializable
-data class WsDelivery(val deliveredId: List<Int>)

@@ -58,7 +58,7 @@ fun Application.configureWebSocket() {
 
                                 when (request.type) {
                                     "connect" -> { //handshake, cache this session
-                                        user = request.data["senderKey"]!!
+                                        user = publicKey
                                         sessions[user] = this
                                     }
                                     else -> {
@@ -83,6 +83,3 @@ fun isTokenExpired(principal: JWTPrincipal): Boolean {
     val expiration = principal.expiresAt?.toInstant() ?: return true
     return Instant.now().isAfter(expiration)
 }
-
-@Serializable
-data class WsRequest(val type: String, val data: Map<String, String>)

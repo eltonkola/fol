@@ -6,8 +6,12 @@ import com.fol.com.fol.db.model.AppProfile
 import com.fol.com.fol.model.DiGraph
 import com.fol.com.fol.model.ThreadPreview
 import com.fol.com.fol.model.repo.MessagesRepository
+import com.fol.com.fol.network.DeliveryCheckRequest
+import com.fol.com.fol.network.MessageReceivedRequest
 import com.fol.com.fol.network.NetworkManager
+import com.fol.com.fol.network.SendMessageRequest
 import com.fol.model.repo.AccountRepository
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -40,6 +44,15 @@ class MainViewModel(
 
         viewModelScope.launch {
             networkManager.serverStatus()
+            delay(3_000)
+            networkManager.sendMessages(listOf(SendMessageRequest(accountRepository.currentUser.publicKey, "1", "hi", 0)))
+            delay(3_000)
+            networkManager.getMessages()
+            delay(3_000)
+            networkManager.received(MessageReceivedRequest(listOf(1)))
+            delay(3_000)
+            networkManager.check(DeliveryCheckRequest(listOf(2)))
+
         }
 
     }
