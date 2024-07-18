@@ -1,4 +1,4 @@
-package com.fol.com.fol.ui
+package com.fol.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

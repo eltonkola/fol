@@ -17,7 +17,6 @@ import androidx.navigation.compose.rememberNavController
 import com.fol.com.fol.db.AppSettings
 import com.fol.com.fol.model.AppsScreen
 import com.fol.com.fol.model.DiGraph
-import com.fol.com.fol.ui.SplashScreen
 import com.fol.com.fol.ui.app.addcontact.AddContactScreen
 import com.fol.com.fol.ui.app.MainScreen
 import com.fol.com.fol.ui.app.thread.ThreadScreen
@@ -26,6 +25,7 @@ import com.fol.com.fol.ui.app.settings.SettingsScreen
 import com.fol.com.fol.ui.onboarding.createaccount.CreateAccountScreen
 import com.fol.com.fol.ui.onboarding.LandingScreen
 import com.fol.com.fol.ui.onboarding.recoveraccount.RecoverAccountScreen
+import com.fol.ui.SplashScreen
 import com.fol.ui.theme.AppTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 

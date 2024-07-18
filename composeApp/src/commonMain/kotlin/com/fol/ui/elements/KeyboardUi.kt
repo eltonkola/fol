@@ -45,7 +45,7 @@ fun KeyboardUi(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.background)
+         //   .background(MaterialTheme.colorScheme.background)
     ) {
 
         Column(
