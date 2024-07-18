@@ -48,6 +48,7 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fol.com.fol.db.model.AppProfile
 import com.fol.com.fol.model.Message
+import com.fol.com.fol.ui.elements.KeyboardUi
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -183,46 +184,67 @@ fun ChatBox(
     onSendChatClickListener: (String) -> Unit,
     modifier: Modifier
 ) {
-    var chatBoxValue by remember { mutableStateOf(TextFieldValue("")) }
-    Row(modifier = modifier.padding(16.dp)) {
-        TextField(
-            value = chatBoxValue,
-            onValueChange = { newText ->
-                chatBoxValue = newText
-            },
-            modifier = Modifier
-                .weight(1f)
-                .padding(4.dp),
-            shape = RoundedCornerShape(24.dp),
-            colors = TextFieldDefaults.textFieldColors(
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent
-            ),
-            placeholder = {
-                Text(text = "Type something")
-            }
-        )
-        Spacer(modifier = Modifier.size(16.dp))
-        IconButton(
-            onClick = {
-                val msg = chatBoxValue.text
-                if (msg.isBlank()) return@IconButton
-                onSendChatClickListener(chatBoxValue.text)
-                chatBoxValue = TextFieldValue("")
-            },
-            modifier = Modifier.size(32.dp)
-                .clip(CircleShape)
-                .background(color = MaterialTheme.colorScheme.primary)
-                .align(Alignment.CenterVertically)
-        ) {
-            Icon(
-                imageVector = Icons.Filled.Send,
-                contentDescription = "Send",
-                tint = MaterialTheme.colorScheme.onPrimary,
-                modifier = Modifier.fillMaxSize().padding(8.dp)
+    var chatBoxValue by remember { mutableStateOf("") }
+    Column (
+        modifier = modifier
+    ){
+
+        Row(modifier = Modifier.padding(16.dp)) {
+            TextField(
+                value = chatBoxValue,
+                onValueChange = {
+
+                },
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(4.dp),
+                enabled = false,
+                shape = RoundedCornerShape(24.dp),
+                colors = TextFieldDefaults.textFieldColors(
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent
+                ),
+                placeholder = {
+                    Text(text = "Type something")
+                }
             )
+            Spacer(modifier = Modifier.size(16.dp))
+            IconButton(
+                onClick = {
+                    val msg = chatBoxValue
+                    if (msg.isBlank()) return@IconButton
+                    onSendChatClickListener(chatBoxValue)
+                    chatBoxValue = ""
+                },
+                modifier = Modifier.size(32.dp)
+                    .clip(CircleShape)
+                    .background(color = MaterialTheme.colorScheme.primary)
+                    .align(Alignment.CenterVertically)
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Send,
+                    contentDescription = "Send",
+                    tint = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier.fillMaxSize().padding(8.dp)
+                )
+            }
         }
+
+        KeyboardUi(
+            query = chatBoxValue,
+            onQueryChange = {
+                chatBoxValue = it
+            },
+            onDone = {
+                onSendChatClickListener(chatBoxValue)
+                chatBoxValue = ""
+            },
+            actionName = "Send",
+            validInput = true,
+            modifier = Modifier.fillMaxWidth().padding(8.dp)
+        )
+
     }
 }
 

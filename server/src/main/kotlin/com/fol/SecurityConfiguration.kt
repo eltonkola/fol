@@ -62,6 +62,11 @@ fun Application.configureSecurityRouting() {
     }
 
     routing {
+
+        get("/"){
+            call.respond("FOL - Fortress Of Letters - server online!")
+        }
+
         post ("/auth") {
             val request = call.receive<AuthRequest>()
             val challenge = generateChallenge()

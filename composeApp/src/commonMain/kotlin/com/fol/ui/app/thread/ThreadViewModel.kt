@@ -113,20 +113,7 @@ class ThreadViewModel(
                 receiverKey = uiState.value.contact!!.publicKey
             }
             messagesRepository.addMessage(message)
-
-            delay(1_000)
-            fakeEchoResponse()
         }
-    }
-
-    private fun fakeEchoResponse(){
-        val message = AppMessage().apply {
-            message = "Ja ke fut kot plako!"
-            senderKey = uiState.value.contact!!.publicKey
-            receiverKey = uiState.value.user.publicKey
-        }
-        messagesRepository.addMessage(message)
-
     }
 
 }
