@@ -70,7 +70,7 @@ class MessagesRepository(
                     ThreadPreview(
                         id = contact.id,
                         contact = contact,
-                        lastMessage = Message("...", Clock.System.now() , contact)
+                        lastMessage = Message("...", Clock.System.now() , false, false,contact)
                     )
                 }
             }

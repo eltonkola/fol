@@ -13,6 +13,8 @@ data class ThreadPreview(
 data class Message(
     val message : String,
     val kur : Instant,
+    val sent: Boolean,
+    val delivered: Boolean,
     val author: Author
 )
 

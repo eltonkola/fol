@@ -42,6 +42,8 @@ fun AppMessage.normalize(author: (String) -> Author) : Message {
     return Message(
         message = this.message,
         kur = this.timeSent.toInstant(),
+        delivered = this.received,
+        sent = this.sent,
         author = author(this.senderKey)
     )
 }
