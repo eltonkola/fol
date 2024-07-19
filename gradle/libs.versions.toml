@@ -21,8 +21,9 @@ kotlinxCoroutinesAndroid = "1.8.1"
 kotlinxDatetime = "0.6.0"
 kotlinxSerializationJson = "1.7.1"
 ktor = "2.3.12"
-ktorClientContentNegotiation = "2.0.0"
-ktorClientJs = "2.1.1"
+ktorClientContentNegotiation = "2.3.12"
+ktorClientContentNegotiationVersion = "2.3.12"
+ktorClientJs = "2.3.12"
 ktorSerializationGson = "2.3.12"
 ktorSerializationKotlinxJson = "2.3.12"
 multiplatformSettings = "1.1.1"
@@ -61,7 +62,9 @@ kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktorClientJs" }
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktorClientContentNegotiation" }
+ktor-client-content-negotiation-v2312 = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktorClientContentNegotiationVersion" }
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktorClientJs" }
+ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
 ktor-client-ios = { module = "io.ktor:ktor-client-ios", version.ref = "ktorClientJs" }
 ktor-client-js = { module = "io.ktor:ktor-client-js", version.ref = "ktorClientJs" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktorClientContentNegotiation" }

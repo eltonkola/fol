@@ -14,22 +14,22 @@ plugins {
 }
 
 kotlin {
-    @OptIn(ExperimentalWasmDsl::class)
-    wasmJs {
-        moduleName = "composeApp"
-        browser {
-            commonWebpackConfig {
-                outputFileName = "composeApp.js"
-                devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
-                    static = (static ?: mutableListOf()).apply {
-                        // Serve sources to debug inside browser
-                        add(project.projectDir.path)
-                    }
-                }
-            }
-        }
-        binaries.executable()
-    }
+//    @OptIn(ExperimentalWasmDsl::class)
+//    wasmJs {
+//        moduleName = "composeApp"
+//        browser {
+//            commonWebpackConfig {
+//                outputFileName = "composeApp.js"
+//                devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
+//                    static = (static ?: mutableListOf()).apply {
+//                        // Serve sources to debug inside browser
+//                        add(project.projectDir.path)
+//                    }
+//                }
+//            }
+//        }
+//        binaries.executable()
+//    }
     
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
@@ -106,13 +106,26 @@ kotlin {
 
         iosMain.dependencies {
             implementation(libs.ktor.client.ios)
+            implementation(libs.ktor.client.darwin)
             implementation(libs.io.ktor.ktor.client.websockets)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.serialization.kotlinx.json)
+
+
         }
 
-        wasmJsMain.dependencies {
-            implementation(libs.ktor.client.js)
-            implementation(libs.io.ktor.ktor.client.websockets)
-        }
+//        wasmJsMain.dependencies {
+//            implementation(libs.io.ktor.ktor.client.websockets)
+//
+//            implementation(libs.ktor.client.js)
+//            implementation(libs.ktor.client.core)
+//            implementation(libs.ktor.client.content.negotiation.v2312)
+//            implementation(libs.ktor.serialization.kotlinx.json)
+//            implementation(libs.ktor.client.cio)
+//
+////            implementation(libs.realm)
+//
+//        }
 
     }
 }
