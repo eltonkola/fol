@@ -13,6 +13,7 @@ androidx-material = "1.12.0"
 androidx-test-junit = "1.2.1"
 compose-plugin = "1.6.11"
 constraintlayoutComposeMultiplatform = "0.4.0"
+cryptography = "0.3.1"
 exposedDao = "0.39.2"
 junit = "4.13.2"
 kermit = "2.0.4"
@@ -39,6 +40,10 @@ material3Android = "1.2.1"
 [libraries]
 
 constraintlayout-compose-multiplatform = { module = "tech.annexflow.compose:constraintlayout-compose-multiplatform", version.ref = "constraintlayoutComposeMultiplatform" }
+cryptography-core = { module = "dev.whyoleg.cryptography:cryptography-core", version.ref = "cryptography" }
+cryptography-provider-apple = { module = "dev.whyoleg.cryptography:cryptography-provider-apple", version.ref = "cryptography" }
+cryptography-provider-jdk = { module = "dev.whyoleg.cryptography:cryptography-provider-jdk", version.ref = "cryptography" }
+cryptography-random = { module = "dev.whyoleg.cryptography:cryptography-random", version.ref = "cryptography" }
 exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "exposedDao" }
 exposed-dao = { module = "org.jetbrains.exposed:exposed-dao", version.ref = "exposedDao" }
 exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "exposedDao" }
