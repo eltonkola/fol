@@ -8,7 +8,7 @@ object CryptoManager {
     private val appEncryption = AppEncryption()
 
     suspend fun generateKeyPair(): UserKeys {
-        return appEncryption.generateKeyPair()
+        return appEncryption.createProfile()
     }
 
     suspend fun validatePublicKey(publicKey: String): Boolean {
@@ -20,7 +20,7 @@ object CryptoManager {
     }
 
     suspend fun signChallenge(challenge: String, privateKeyBase64: String): String {
-        return appEncryption.signChallenge(challenge, privateKeyBase64)
+        return appEncryption.encryptWithRsaPublicKey(challenge, privateKeyBase64)
     }
 
 }
