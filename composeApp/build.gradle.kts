@@ -176,6 +176,8 @@ android {
 }
 dependencies {
     implementation(libs.androidx.material3.android)
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.junit.jupiter)
 }
 
 compose.desktop {
